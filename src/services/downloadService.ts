@@ -44,6 +44,7 @@ export const downloadFile = async (
                 if (!reader) throw new Error('ReadableStream not supported');
 
                 const chunks: Uint8Array[] = [];
+                // eslint-disable-next-line no-constant-condition
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
@@ -94,7 +95,7 @@ export const downloadFile = async (
 /**
  * Generates and downloads a CSV file from an array of objects.
  */
-export const downloadCSV = <T extends Record<string, any>>(
+export const downloadCSV = <T extends Record<string, unknown>>(
     data: T[],
     filename: string,
     options?: Omit<DownloadOptions, 'filename' | 'contentType'>

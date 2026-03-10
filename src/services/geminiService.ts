@@ -15,7 +15,7 @@ export const getPaymentRisk = async (payment: Payment, fallbackMessage: string):
 
         if (!response.ok) throw new Error("Worker node did not respond.");
 
-        const data = await response.json() as any;
+        const data = await response.json() as unknown;
 
         // Match the expected return schema
         return {

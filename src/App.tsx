@@ -17,6 +17,7 @@ const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
 const AccountPage = React.lazy(() => import('./pages/AccountPage'));
 const RedirectPage = React.lazy(() => import('./pages/RedirectPage'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ShippingAnalytics = React.lazy(() => import('./pages/ShippingAnalytics'));
 const RoutingControlPanel = React.lazy(() => import('./components/RoutingControlPanel'));
@@ -25,8 +26,8 @@ const RoutingControlPanel = React.lazy(() => import('./components/RoutingControl
 const PageLoader = () => (
     <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-            <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-sm text-slate-600">Loading...</span>
+            <div className="w-8 h-8 border-2 border-mercury-100 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-sm text-mercury-300">Loading...</span>
         </div>
     </div>
 );
@@ -45,7 +46,7 @@ const App: React.FC = () => {
         const getPageFromHash = (): Page => {
             const hash = typeof window !== 'undefined' ? window.location.hash : '';
             const clean = hash.replace(/^#\/?/, '').split('?')[0];
-            const pages: Page[] = ['home', 'payments', 'payouts', 'plugins', 'integrations', 'developer', 'reports', 'settings', 'account', 'redirect', 'routing', 'login', 'checkout', 'success', 'shipping_analytics'];
+            const pages: Page[] = ['home', 'payments', 'payouts', 'plugins', 'integrations', 'developer', 'reports', 'settings', 'account', 'redirect', 'routing', 'login', 'signup', 'checkout', 'success', 'shipping_analytics'];
             return (pages.includes(clean as Page) ? (clean as Page) : 'login');
         };
         setCurrentPage(getPageFromHash());
@@ -59,6 +60,7 @@ const App: React.FC = () => {
         switch (currentPage) {
             case 'home': return <HomePage />;
             case 'login': return <LoginPage />;
+            case 'signup': return <SignUpPage />;
             case 'payments': return <PaymentsPage />;
             case 'payouts': return <PayoutsPage />;
             case 'plugins': return <PluginsPage setCurrentPage={setCurrentPage} />;
@@ -75,17 +77,17 @@ const App: React.FC = () => {
         }
     };
 
-    if (currentPage === 'login') {
-        return <LoginPage />;
+    if (currentPage === 'login' || currentPage === 'signup') {
+        return currentPage === 'login' ? <LoginPage /> : <SignUpPage />;
     }
 
     return (
-        <div className="relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30 min-h-screen flex overflow-hidden">
-            {/* Ambient Background Effects */}
+        <div className="relative bg-white min-h-screen flex overflow-hidden">
+            {/* Dark Background with Subtle Ambient Effects */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/5 to-emerald-500/5 rounded-full blur-3xl" />
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-100 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gray-200 rounded-full blur-3xl animate-pulse delay-1000" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-gray-100 to-gray-200 rounded-full blur-3xl" />
             </div>
 
             <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isOpen={isSidebarOpen} setOpen={setSidebarOpen} />
@@ -105,6 +107,8 @@ const App: React.FC = () => {
                     </div>
                 </main>
             </div>
+
+            {/* AI Chat Widget - Global Access */}
         </div>
     );
 };

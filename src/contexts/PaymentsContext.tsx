@@ -44,10 +44,12 @@ export const PaymentsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 items: [{ id: `it_${order.id}`, name: `Seat: ${order.seat_zone}`, quantity: order.qty, price: order.price_thb / order.qty }]
             }));
 
-            // Merge with mock payments for "High Density" look if DB is sparsely populated
-            setPayments(prev => [...mappedPayments, ...MOCK_PAYMENTS.filter(m => !mappedPayments.find(p => p.id === m.id))]);
+            // Use API payments if available, otherwise fall back to mock data
+            setPayments(mappedPayments.length > 0 ? mappedPayments : MOCK_PAYMENTS);
         } catch (error) {
             console.error('Data Awakening Error:', error);
+            // Fall back to mock payments if API fails
+            setPayments(MOCK_PAYMENTS);
         } finally {
             setLoading(false);
         }

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
-import { Settings, Globe, Shield, Bell, Smartphone, User, Lock, Mail, Languages, Coins, Fingerprint, ShieldCheck } from 'lucide-react';
+import { Globe, Shield, Bell, Smartphone, User, Lock, Mail, Languages, Coins, Fingerprint, ShieldCheck } from 'lucide-react';
 import Switch from '../components/Switch';
 import Modal from '../components/Modal';
 
 const SettingsPage: React.FC = () => {
-    const { currentLang, setLanguage, t } = useTranslation();
+    const { currentLang, setLanguage } = useTranslation();
     const [isBiometricEnabled, setIsBiometricEnabled] = useState(true);
     const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
 
@@ -47,11 +47,12 @@ const SettingsPage: React.FC = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
                             <div className="space-y-6">
-                                <label className={labelBaseClasses}>Interface Language</label>
+                                <label htmlFor="language" className={labelBaseClasses}>Interface Language</label>
                                 <div className="relative group/select">
                                     <select
+                                        id="language"
                                         value={currentLang}
-                                        onChange={(e) => setLanguage(e.target.value as any)}
+                                        onChange={(e) => setLanguage(e.target.value as string)}
                                         className={`${inputBaseClasses} appearance-none cursor-pointer pr-16`}
                                     >
                                         {languages.map(lang => (
@@ -65,9 +66,9 @@ const SettingsPage: React.FC = () => {
                             </div>
 
                             <div className="space-y-6">
-                                <label className={labelBaseClasses}>Base Currency Tier</label>
+                                <label htmlFor="currency" className={labelBaseClasses}>Base Currency Tier</label>
                                 <div className="relative group/select">
-                                    <select className={`${inputBaseClasses} appearance-none cursor-pointer pr-16`}>
+                                    <select id="currency" className={`${inputBaseClasses} appearance-none cursor-pointer pr-16`}>
                                         <option className="bg-white text-slate-800">THB (Thai Baht)</option>
                                         <option className="bg-white text-slate-800">USD (US Dollar)</option>
                                         <option className="bg-white text-slate-800">EUR (Euro)</option>

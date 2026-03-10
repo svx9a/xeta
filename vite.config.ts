@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     server: {
-      port: 8080,
+      port: 8081,
       host: '0.0.0.0',
       hmr: {
         overlay: false, // Disable error overlay for faster HMR
@@ -14,8 +14,6 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react({
-        // Enable fast refresh for better HMR
-        fastRefresh: true,
         // Enable JSX runtime for better performance
         jsxRuntime: 'automatic',
       }),

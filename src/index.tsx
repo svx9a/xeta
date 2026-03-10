@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { PaymentsProvider } from './contexts/PaymentsContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -12,10 +13,12 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
         <PaymentsProvider>
-            <App />
+          <App />
         </PaymentsProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import StatCard from '../components/StatCard';
 import { Payment } from '../types';
@@ -7,6 +7,7 @@ import { Activity, CreditCard, ExternalLink, Loader2 } from 'lucide-react';
 import { fetchRevenueStream } from '../services/edgeClient';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { MOCK_CHART_DATA } from '../constants';
+import { getPaymentRisk } from '../services/geminiService';
 
 const calculateStats = (payments: Payment[]) => {
     const now = new Date();
@@ -53,6 +54,8 @@ const HomePage: React.FC = () => {
     const { payments } = usePayments();
     const [chartData, setChartData] = useState<unknown[]>(MOCK_CHART_DATA);
     const [loadingChart, setLoadingChart] = useState(false);
+    const [paymentRisks, setPaymentRisks] = useState<Record<string, { risk: 'Low' | 'Medium' | 'High'; reason: string } | null>>({});
+    const fetchedPaymentIds = useRef<Set<string>>(new Set());
 
     useEffect(() => {
         (async () => {
@@ -65,6 +68,26 @@ const HomePage: React.FC = () => {
         })();
     }, []);
 
+    useEffect(() => {
+        const recentPayments = payments.slice(0, 5);
+        const fetchRisks = async () => {
+            const newRisks: Record<string, { risk: 'Low' | 'Medium' | 'High'; reason: string } | null> = {};
+            for (const payment of recentPayments) {
+                if (!fetchedPaymentIds.current.has(payment.id)) {
+                    fetchedPaymentIds.current.add(payment.id);
+                    const risk = await getPaymentRisk(payment, 'Local assessment');
+                    newRisks[payment.id] = risk;
+                }
+            }
+            if (Object.keys(newRisks).length > 0) {
+                setPaymentRisks(prev => ({ ...prev, ...newRisks }));
+            }
+        };
+        if (recentPayments.length > 0) {
+            fetchRisks();
+        }
+    }, [payments]);
+
     const formatCurrency = (value: number) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 }).format(value);
 
     const paymentStats = useMemo(() => calculateStats(payments), [payments]);
@@ -72,9 +95,9 @@ const HomePage: React.FC = () => {
     return (
         <div className="relative min-h-screen overflow-hidden">
             {/* Ambient Background */}
-            <div className="fixed inset-0 bg-gradient-to-br from-mercury-50 via-white to-mercury-100/30" />
-            <div className="fixed top-[-20%] right-[-10%] w-[800px] h-[800px] bg-gradient-to-r from-mercury-200/10 to-mercury-300/10 rounded-full blur-3xl animate-pulse" />
-            <div className="fixed bottom-[-20%] left-[-10%] w-[700px] h-[700px] bg-gradient-to-r from-mercury-100/8 to-mercury-200/8 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="fixed inset-0 bg-white" />
+            <div className="fixed top-[-20%] right-[-10%] w-[800px] h-[800px] bg-gradient-to-r from-gray-100 to-gray-200 rounded-full blur-3xl animate-pulse" />
+            <div className="fixed bottom-[-20%] left-[-10%] w-[700px] h-[700px] bg-gradient-to-r from-gray-50 to-gray-100 rounded-full blur-3xl animate-pulse delay-1000" />
 
             {/* Scanning Beam */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-scanline opacity-40 pointer-events-none" />
@@ -87,7 +110,7 @@ const HomePage: React.FC = () => {
                             <div className="w-16 h-[2px] bg-gradient-to-r from-mercury-400 to-mercury-600" />
                             <span className="text-[10px] font-black text-mercury-600 tracking-[0.4em] uppercase">Operational Control</span>
                         </div>
-                        <h1 className="text-5xl lg:text-8xl font-black text-mercury-900 tracking-tighter uppercase leading-none">
+                        <h1 className="text-xl lg:text-3xl font-black text-mercury-900 tracking-tighter uppercase leading-none">
                             XETA_CORE Dashboard
                         </h1>
                         <p className="text-[11px] font-black text-mercury-600 uppercase tracking-[0.5em]">
@@ -108,15 +131,22 @@ const HomePage: React.FC = () => {
 
                 {/* Core Metrics Cluster */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                    <StatCard titleKey="todaySoFar" amount={formatCurrency(paymentStats.today.revenue)} paymentCount={paymentStats.today.count} />
-                    <StatCard titleKey="yesterday" amount={formatCurrency(paymentStats.yesterday.revenue)} paymentCount={paymentStats.yesterday.count} trend="down" trendValue="-4.1%" />
-                    <StatCard titleKey="thisMonthSoFar" amount={formatCurrency(paymentStats.thisMonth.revenue)} paymentCount={paymentStats.thisMonth.count} trend="up" trendValue="+22.5%" />
-                    <StatCard titleKey="lastMonth" amount={formatCurrency(paymentStats.lastMonth.revenue)} paymentCount={paymentStats.lastMonth.count} />
+                    <StatCard titleKey="todaySoFar" amount={formatCurrency(paymentStats.today.revenue)} paymentCount={paymentStats.today.count} onClick={() => window.location.hash = '/payments'} />
+                    <StatCard titleKey="yesterday" amount={formatCurrency(paymentStats.yesterday.revenue)} paymentCount={paymentStats.yesterday.count} trend="down" trendValue="-4.1%" onClick={() => window.location.hash = '/payments'} />
+                    <StatCard titleKey="thisMonthSoFar" amount={formatCurrency(paymentStats.thisMonth.revenue)} paymentCount={paymentStats.thisMonth.count} trend="up" trendValue="+22.5%" onClick={() => window.location.hash = '/payments'} />
+                    <StatCard titleKey="lastMonth" amount={formatCurrency(paymentStats.lastMonth.revenue)} paymentCount={paymentStats.lastMonth.count} onClick={() => window.location.hash = '/payments'} />
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                     {/* Chart Architecture */}
-                    <div className="xl:col-span-2 bg-white/85 backdrop-blur-2xl rounded-[3rem] p-8 lg:p-12 border border-white/20 relative overflow-hidden group shadow-2xl transition-all duration-700 hover:border-white/30 hover:translate-y-[-4px] hover:bg-white/90">
+                    <div
+                        className="xl:col-span-2 bg-white/85 backdrop-blur-2xl rounded-[3rem] p-8 lg:p-12 border border-white/20 relative overflow-hidden group shadow-2xl transition-all duration-700 hover:border-white/30 hover:translate-y-[-4px] hover:bg-white/90 cursor-pointer focus:outline-none focus:ring-2 focus:ring-mercury-400 focus:ring-offset-2"
+                        onClick={() => window.location.hash = '/reports'}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.location.hash = '/reports'; } }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="View volume trend reports"
+                    >
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-mercury-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
                         <div className="flex items-center justify-between mb-12 relative z-10">
@@ -197,34 +227,48 @@ const HomePage: React.FC = () => {
                         </div>
 
                         <div className="space-y-3">
-                            {payments.slice(0, 5).map((p) => (
-                                <div
-                                    key={p.id}
-                                    className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-mercury-50 to-white border border-mercury-200/50 hover:border-mercury-300/30 hover:from-mercury-100 hover:to-mercury-50 transition-all duration-500 group/item cursor-pointer"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-white border border-mercury-200/50 flex items-center justify-center text-mercury-400 group-hover/item:text-mercury-600 group-hover/item:border-mercury-300/30 transition-all duration-500 shadow-sm">
-                                            <CreditCard className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-black text-mercury-900 uppercase tracking-tighter leading-none mb-1">{p.customer.name}</p>
-                                            <div className="flex items-center gap-2">
-                                                <div className={`w-2 h-2 rounded-full ${p.status === 'captured' ? 'bg-mercury-500' : 'bg-mercury-400'}`} />
-                                                <p className="text-[9px] font-black text-mercury-600 uppercase tracking-tight opacity-70">{p.status.replace('_', ' ')}</p>
+                            {payments.slice(0, 5).map((p) => {
+                                const risk = paymentRisks[p.id];
+                                return (
+                                    <div
+                                        key={p.id}
+                                        className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-mercury-50 to-white border border-mercury-200/50 hover:border-mercury-300/30 hover:from-mercury-100 hover:to-mercury-50 transition-all duration-500 group/item cursor-pointer focus:outline-none focus:ring-2 focus:ring-mercury-400 focus:ring-offset-2"
+                                        onClick={() => window.location.hash = '/payments'}
+                                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.location.hash = '/payments'; } }}
+                                        tabIndex={0}
+                                        role="button"
+                                        aria-label={`View details for payment by ${p.customer.name}`}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-2xl bg-white border border-mercury-200/50 flex items-center justify-center text-mercury-400 group-hover/item:text-mercury-600 group-hover/item:border-mercury-300/30 transition-all duration-500 shadow-sm">
+                                                <CreditCard className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-mercury-900 uppercase tracking-tighter leading-none mb-1">{p.customer.name}</p>
+                                                <div className="flex items-center gap-2">
+                                                    <div className={`w-2 h-2 rounded-full ${p.status === 'captured' ? 'bg-mercury-500' : 'bg-mercury-400'}`} />
+                                                    <p className="text-[9px] font-black text-mercury-600 uppercase tracking-tight opacity-70">{p.status.replace('_', ' ')}</p>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div className="text-right flex flex-col items-end">
+                                            <span className="text-lg font-black text-mercury-900 tracking-widest uppercase mb-1 leading-none">
+                                                {formatCurrency(p.amount).replace('฿', '')}
+                                                <span className="text-[9px] text-mercury-600 ml-1">THB</span>
+                                            </span>
+                                            <span className="text-[8px] font-black text-mercury-400 tracking-[0.2em] uppercase font-mono">
+                                                {new Date(p.date).toLocaleDateString()}
+                                            </span>
+                                            {risk && (
+                                                <div className="flex items-center gap-1 mt-1">
+                                                    <div className={`w-2 h-2 rounded-full ${risk.risk === 'High' ? 'bg-red-500' : risk.risk === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'}`} />
+                                                    <span className="text-[7px] font-black text-mercury-600 uppercase tracking-tight">{risk.risk} RISK</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="text-right flex flex-col items-end">
-                                        <span className="text-lg font-black text-mercury-900 tracking-widest uppercase mb-1 leading-none">
-                                            {formatCurrency(p.amount).replace('฿', '')}
-                                            <span className="text-[9px] text-mercury-600 ml-1">THB</span>
-                                        </span>
-                                        <span className="text-[8px] font-black text-mercury-400 tracking-[0.2em] uppercase font-mono">
-                                            {new Date(p.date).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

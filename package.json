@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "dev:turbo": "vite --host 0.0.0.0 --port 8080 --mode development",
+    "dev:turbo": "vite --host 0.0.0.0 --port 8081 --mode development",
     "build": "npm run check-monaco && vite build",
     "build:turbo": "vite build --mode production --minify esbuild",
     "build:analyze": "vite build --mode analyze",

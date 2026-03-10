@@ -13,7 +13,8 @@ export type Page =
   'checkout' |
   'success' |
   'shipping_analytics' |
-  'login';
+  'login' |
+  'signup';
 
 // Updated to match Shopify's payment lifecycle
 export type PaymentStatus = 'authorized' | 'captured' | 'refunded' | 'partially_refunded' | 'voided' | 'failed';

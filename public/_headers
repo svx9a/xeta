@@ -1,25 +1,6 @@
 /*
-! Content Security Policy
-Default-src 'self'
-Script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.cloudflare.com
-Style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
-Font-src 'self' https://fonts.gstatic.com
-Img-src 'self' data: https:
-Connect-src 'self' https://*.cloudflare.com wss://*.cloudflare.com
-*/
-
-/*
-! Security Headers
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: geolocation=(), microphone=(), camera=()
-*/
-
-/*
-! Redirect Rules
-# Redirect HTTP to HTTPS
-https://:project.pages.dev/* https://:project.pages.dev/:splat 301
-
-# SPA fallback for client-side routing
-/* /index.html 200
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' cdn.tailwindcss.com https://cdn.jsdelivr.net https://*.sentry.io https://api.github.com; style-src 'self' 'unsafe-inline' cdn.tailwindcss.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()

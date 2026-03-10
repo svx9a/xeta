@@ -35,13 +35,17 @@ const appBridge: AppBridgeType = {
     if (typeof window === 'undefined') return;
     try {
       window.localStorage.setItem(key, value);
-    } catch {}
+    } catch (error) {
+      console.warn('setStorage failed:', error);
+    }
   },
   removeStorage: (key: string) => {
     if (typeof window === 'undefined') return;
     try {
       window.localStorage.removeItem(key);
-    } catch {}
+    } catch (error) {
+      console.warn('removeStorage failed:', error);
+    }
   },
   onRouteChange: (handler: RouteChangeHandler) => {
     if (typeof window === 'undefined') return () => {};

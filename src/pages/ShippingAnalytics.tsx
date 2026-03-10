@@ -1,7 +1,6 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { Truck, Zap, Globe, TrendingUp, DollarSign, Activity, Clock, ShieldCheck, ChevronRight } from 'lucide-react';
-import Card from '../components/Card';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { Truck, Zap, Globe, TrendingUp, DollarSign, Activity, ShieldCheck } from 'lucide-react';
 
 const performanceData = [
     { name: 'Kerry', success: 98.4, speed: 1.2 },

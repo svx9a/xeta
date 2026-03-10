@@ -1,6 +1,8 @@
 import { Payment, ActivityLog, Payout, User } from './types';
 
-export const API_BASE_URL = "https://f7429329.xetapay-9jp.pages.dev";
+// Get API base URL from environment, fallback to default
+const defaultApiUrl = 'https://f7429329.xetapay-9jp.pages.dev';
+export const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || defaultApiUrl;
 
 
 export const NAV_LINKS = [

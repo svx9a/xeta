@@ -20,7 +20,7 @@ export async function fetchRevenueStream(): Promise<RevenuePoint[]> {
 export async function fetchRoutingPreview(): Promise<
   { provider: string; fee_pct: number; fee_fixed: number; success_rate: number; score: number }[]
 > {
-  const data = await getJson<{ data: any[] }>("/api/routing/preview");
+  const data = await getJson<{ data: unknown[] }>("/api/routing/preview");
   return data?.data ?? [];
 }
 

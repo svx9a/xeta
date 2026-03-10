@@ -22,34 +22,36 @@ const PDPABanner: React.FC = () => {
 
     return (
         <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:w-96 z-50 animate-slideUp">
-            <div className="bg-white border border-border-color rounded-2xl shadow-2xl p-6 relative overflow-hidden">
+            <div className="bg-black/90 border border-white/12 rounded-2xl shadow-2xl p-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-2">
-                    <button onClick={() => setIsVisible(false)} className="text-text-secondary hover:text-text-primary transition-colors">
+                    <button onClick={() => setIsVisible(false)} className="text-white/60 hover:text-white transition-colors">
                         <XIcon className="w-4 h-4" />
                     </button>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <ShieldCheckIcon className="w-5 h-5 text-primary" />
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                        <ShieldCheckIcon className="w-5 h-5 text-white/60" />
                     </div>
-                    
+
                     <div className="space-y-3">
-                        <h3 className="text-sm font-extrabold text-text-primary uppercase tracking-widest">{t('pdpaCompliance')}</h3>
-                        <p className="text-xs font-medium text-text-secondary leading-relaxed">
+                        <h3 className="text-sm font-extrabold text-white uppercase tracking-widest">{t('pdpaCompliance')}</h3>
+                        <p className="text-xs font-medium text-white/70 leading-relaxed">
                             {t('acceptTerms')}
                         </p>
-                        
+
                         <div className="flex items-center gap-3 pt-2">
-                            <button 
+                            <button
                                 onClick={handleAccept}
-                                className="px-5 py-2.5 bg-primary text-slate-800 text-[10px] font-bold uppercase tracking-widest rounded-lg satin-effect"
+                                className="px-5 py-2.5 bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg satin-effect"
                             >
                                 {t('acceptTerms').split(' ')[0]}
                             </button>
-                            <a href="#" className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">
+                            <button
+                                className="text-[10px] font-bold text-white/80 uppercase tracking-widest hover:underline"
+                            >
                                 {t('privacyPolicy')}
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
