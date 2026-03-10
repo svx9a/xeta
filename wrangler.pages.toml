@@ -1,0 +1,17 @@
+name = "xeta-pay-dashboard"
+compatibility_date = "2024-03-01"
+
+[env.production]
+# Production environment variables
+# Add your production API keys and configuration here
+
+# Pages configuration for static site deployment
+pages_build_output_dir = "dist"
+
+# Build commands for Pages
+build_command = "npm run build:turbo"
+destination_dir = "dist"
+
+# Environment variables for Pages functions (if using Pages Functions)
+[vars]
+NODE_ENV = "production"

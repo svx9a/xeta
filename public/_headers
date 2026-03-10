@@ -1,0 +1,25 @@
+/*
+! Content Security Policy
+Default-src 'self'
+Script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.cloudflare.com
+Style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+Font-src 'self' https://fonts.gstatic.com
+Img-src 'self' data: https:
+Connect-src 'self' https://*.cloudflare.com wss://*.cloudflare.com
+*/
+
+/*
+! Security Headers
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+*/
+
+/*
+! Redirect Rules
+# Redirect HTTP to HTTPS
+https://:project.pages.dev/* https://:project.pages.dev/:splat 301
+
+# SPA fallback for client-side routing
+/* /index.html 200

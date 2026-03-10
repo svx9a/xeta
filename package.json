@@ -1,0 +1,51 @@
+{
+  "name": "xeta-pay-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "dev:turbo": "vite --host 0.0.0.0 --port 8080 --mode development",
+    "build": "npm run check-monaco && vite build",
+    "build:turbo": "vite build --mode production --minify esbuild",
+    "build:analyze": "vite build --mode analyze",
+    "deploy": "wrangler deploy",
+    "deploy:fast": "npm run build:turbo && wrangler pages deploy dist --project-name=xetapay",
+    "preview": "vite preview",
+    "icons:optimize": "tsx scripts/optimize-icons.ts",
+    "check-monaco": "node scripts/check-monaco-usage.js",
+    "god-speed": "npm run dev:turbo"
+  },
+  "dependencies": {
+    "@google/genai": "^1.13.0",
+    "@sentry/react": "^10.43.0",
+    "@sentry/vite-plugin": "^5.1.1",
+    "@types/body-parser": "^1.19.6",
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "express-basic-auth": "^1.2.1",
+    "lucide-react": "^0.577.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "recharts": "^3.1.2",
+    "sharp": "^0.34.5",
+    "svgo": "^4.0.1",
+    "tsx": "^4.21.0",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.14.0",
+    "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
