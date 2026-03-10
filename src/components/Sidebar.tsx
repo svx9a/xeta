@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, isOpen, 
     const { t } = useTranslation();
 
     const getIcon = (id: string, isActive: boolean) => {
-        const iconPath = `/src/assets/icons/${id === 'home' ? 'chart' :
+        const iconPath = `/icons/${id === 'home' ? 'chart' :
             id === 'payments' ? 'card' :
                 id === 'payouts' ? 'refresh' :
                     id === 'plugins' ? 'globe' :
@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, isOpen, 
 
     return (
         <>
-            <aside className={`fixed top-0 left-0 z-40 w-72 h-screen bg-gradient-to-b from-[#F5F5F5] to-[#E8E8E8] backdrop-blur-2xl border-r border-gray-300 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] lg:translate-x-0 shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <aside className={`fixed top-0 left-0 z-40 w-72 h-screen bg-[#0B1120] border-r border-white/5 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
                 {/* Logo Architecture */}
                 <div className="flex flex-col items-center justify-center pt-8 pb-6 relative group">
@@ -44,10 +44,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, isOpen, 
                         <img
                             src="/logo-text.png"
                             alt="XETAPAY Logo"
-                            className="w-full h-full object-contain opacity-100 brightness-[2.4]"
+                            className="w-full h-full object-contain opacity-100 invert brightness-0"
                         />
                     </div>
-                    <div className="mt-3 text-[8px] font-black text-gray-600 tracking-[0.8em] uppercase opacity-60">v9.2</div>
                 </div>
 
                 {/* Navigation Core */}
@@ -55,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, isOpen, 
                     <div className="space-y-8">
                         {NAV_GROUPS.map((group) => (
                             <div key={group.title} className="mb-0">
-                                <h3 className="px-4 mb-3 text-[9px] font-black text-gray-500 uppercase tracking-[0.5em] font-mono">
+                                <h3 className="px-4 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">
                                     {group.title}
                                 </h3>
                                 <ul className="space-y-1">
@@ -70,25 +69,17 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, isOpen, 
                                                         setCurrentPage(item.id);
                                                         setOpen(false);
                                                     }}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === 'Enter' || e.key === ' ') {
-                                                            appBridge.navigate(item.id);
-                                                            setCurrentPage(item.id);
-                                                            setOpen(false);
-                                                        }
-                                                    }}
-                                                    className={`w-full flex items-center gap-3 py-3 px-4 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 group/nav min-h-[44px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white mercury-border ${isActive
-                                                        ? 'bg-gray-300 text-gray-900 shadow-lg glow-sm z-10'
-                                                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                                                    className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-[14px] transition-all duration-300 group/nav min-h-[48px] focus:outline-none ${isActive
+                                                        ? 'bg-[#3B82F6] text-white shadow-lg shadow-blue-500/20'
+                                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
                                                         }`}
                                                 >
-                                                    <span className="flex-shrink-0 transition-all duration-300 group-hover/nav:scale-110">
+                                                    <span className={`flex-shrink-0 transition-all duration-300 ${isActive ? 'brightness-200' : 'opacity-50 grayscale group-hover/nav:grayscale-0 group-hover/nav:opacity-100'}`}>
                                                         {getIcon(item.id, isActive)}
                                                     </span>
                                                     <span className="relative z-10 flex-1 text-left">
                                                         {label}
                                                     </span>
-                                                    {isActive && <div className="w-2 h-2 rounded-full bg-gray-600 animate-soft-pulse shadow-lg" />}
                                                 </button>
                                             </li>
                                         );

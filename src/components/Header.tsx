@@ -47,52 +47,40 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, setCurrentPage }) => {
     };
 
     return (
-        <header className="flex justify-between md:justify-end items-center px-6 py-4 bg-black/90 backdrop-blur-2xl border-b border-white/12 sticky top-0 z-[100] w-full shadow-lg mercury-border-glow">
+        <header className="flex justify-between md:justify-end items-center px-6 py-4 bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-[100] w-full shadow-sm">
             <div className="flex items-center gap-4 lg:hidden">
                 <button
                     onClick={onMenuClick}
-                    className="text-white/70 hover:text-white transition-colors p-3 rounded-lg hover:bg-white/5 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black"
+                    className="text-slate-600 hover:text-slate-900 transition-colors p-3 rounded-lg hover:bg-slate-100 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none"
                     aria-label="Menu"
                 >
                     <Bars3Icon className="w-6 h-6" />
-                </button>
-                <button
-                    onClick={() => handleNavigate('home')}
-                    className="h-11 min-w-[44px] cursor-pointer flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black rounded"
-                    aria-label="Home"
-                >
-                    <img
-                        src="/logo-text.png"
-                        alt="XETAPAY Logo"
-                        className="h-full object-contain opacity-100 brightness-200"
-                    />
                 </button>
             </div>
 
             <div className="flex items-center gap-4">
                 {/* Connected Status */}
-                <div className="hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-white/20 bg-white/5 transition-all cursor-default group animate-gentle-glow">
+                <div className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 transition-all cursor-default group">
                     <div className="relative">
-                        <div className="w-2 h-2 rounded-full bg-white shadow-lg shadow-white/50 z-10 relative" />
-                        <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-30" />
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 z-10 relative" />
                     </div>
-                    <span className="text-[9px] font-black text-white/90 uppercase tracking-[0.2em] group-hover:text-white transition-colors">Node_Sync: Active</span>
+                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Node_Sync: Active</span>
                 </div>
 
                 {/* Language Switcher */}
                 <div className="relative" ref={langMenuRef}>
                     <button
                         onClick={() => setLangMenuOpen(!isLangMenuOpen)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg border border-white/12 hover:border-white/20 transition-all text-xs font-bold text-white/80 uppercase tracking-wide bg-white/5 backdrop-blur-sm group hover:bg-white/10 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black glow-sm"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-slate-300 transition-all text-[11px] font-bold text-slate-600 uppercase tracking-wide bg-white hover:bg-slate-50 min-h-[44px] focus:outline-none"
                         aria-expanded={isLangMenuOpen}
                         aria-haspopup="true"
                     >
-                        <Globe className="w-4 h-4 text-white/50 group-hover:text-white/80 transition-colors" />
-                        <span className="group-hover:text-white transition-colors">{currentLangData.label}</span>
+                        <Globe className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                        <span className="group-hover:text-slate-900 transition-colors">{currentLangData.label}</span>
                     </button>
 
                     {isLangMenuOpen && (
-                        <div className="absolute right-0 mt-3 w-44 bg-black/95 backdrop-blur-xl border border-white/12 rounded-2xl shadow-2xl z-50 overflow-hidden animate-fadeIn py-2" role="menu">
+                        <div className="absolute right-0 mt-3 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden animate-fadeIn py-2" role="menu">
                             {languages.map((lang) => (
                                 <button
                                     key={lang.code}
@@ -100,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, setCurrentPage }) => {
                                         setLanguage(lang.code as 'en' | 'th' | 'vi' | 'id');
                                         setLangMenuOpen(false);
                                     }}
-                                    className={`w-full text-left px-5 py-3 text-[10px] font-bold transition-all uppercase tracking-[0.1em] ${currentLang === lang.code ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                                    className={`w-full text-left px-5 py-3 text-[11px] font-bold transition-all uppercase tracking-wide ${currentLang === lang.code ? 'text-[#3B82F6] bg-blue-50' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                                     role="menuitem"
                                 >
                                     {lang.label}
@@ -114,38 +102,38 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, setCurrentPage }) => {
                 <div className="relative" ref={menuRef}>
                     <button
                         onClick={() => setMenuOpen(!isMenuOpen)}
-                        className="flex items-center gap-3 pl-3 pr-4 py-3 rounded-lg transition-all hover:bg-white/10 group border border-white/12 hover:border-white/20 bg-white/5 backdrop-blur-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black glow-sm"
+                        className="flex items-center gap-3 pl-3 pr-4 py-2 rounded-xl border border-slate-200 hover:border-slate-300 transition-all bg-white hover:bg-slate-50 min-h-[44px] focus:outline-none"
                     >
-                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white/20 to-white/10 text-white flex items-center justify-center text-[10px] font-black shadow-lg transition-all group-hover:scale-105 group-hover:shadow-xl">
+                        <div className="w-10 h-10 rounded-xl bg-[#0B1120] text-white flex items-center justify-center text-[10px] font-bold shadow-sm transition-all group-hover:scale-105">
                             SJ
                         </div>
                         <div className="hidden sm:flex flex-col items-start text-left">
-                            <span className="text-[11px] font-black text-white uppercase tracking-tighter leading-none mb-1">Steve John</span>
-                            <span className="text-[8px] font-black text-white/60 tracking-[0.2em] uppercase opacity-80">MASTER_NODE_ADMIN</span>
+                            <span className="text-[12px] font-bold text-slate-900 tracking-tight leading-none mb-1">Steve John</span>
+                            <span className="text-[10px] font-medium text-slate-500 uppercase">Provider Admin</span>
                         </div>
-                        <ChevronDownIcon className={`w-3 h-3 text-white/50 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''} group-hover:text-white/80`} />
+                        <ChevronDownIcon className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {isMenuOpen && (
-                        <div className="absolute right-0 mt-3 w-72 bg-black/95 backdrop-blur-xl border border-white/12 rounded-[2rem] shadow-2xl z-50 overflow-hidden animate-fadeIn py-3">
+                        <div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden animate-fadeIn py-3">
                             <ul className="space-y-1">
-                                <li className="px-3">
-                                    <button onClick={() => handleNavigate('account')} className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-lg uppercase tracking-wide transition-all group/item min-h-[44px] focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black focus:bg-white/10">
-                                        <span>Identity Profile</span>
-                                        <User className="w-5 h-5 opacity-50 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
+                                <li className="px-2">
+                                    <button onClick={() => handleNavigate('account')} className="w-full flex items-center justify-between px-4 py-3 text-[12px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg uppercase tracking-wide transition-all min-h-[44px] focus:outline-none">
+                                        <span>Profile</span>
+                                        <User className="w-4 h-4 opacity-50" />
                                     </button>
                                 </li>
-                                <li className="px-3">
-                                    <button onClick={() => handleNavigate('settings')} className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-lg uppercase tracking-wide transition-all group/item min-h-[44px] focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-black focus:bg-white/10">
-                                        <span>Core Settings</span>
-                                        <Settings className="w-5 h-5 opacity-50 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
+                                <li className="px-2">
+                                    <button onClick={() => handleNavigate('settings')} className="w-full flex items-center justify-between px-4 py-3 text-[12px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg uppercase tracking-wide transition-all min-h-[44px] focus:outline-none">
+                                        <span>Settings</span>
+                                        <Settings className="w-4 h-4 opacity-50" />
                                     </button>
                                 </li>
-                                <div className="h-px bg-white/10 mx-6 my-2" />
-                                <li className="px-3">
-                                    <button onClick={() => handleNavigate('login')} className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg uppercase tracking-wide transition-all group/item min-h-[44px] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black focus:bg-red-500/10">
-                                        <span>Revoke Session</span>
-                                        <LogOut className="w-5 h-5 opacity-50 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
+                                <div className="h-px bg-slate-100 mx-4 my-2" />
+                                <li className="px-2">
+                                    <button onClick={() => handleNavigate('login')} className="w-full flex items-center justify-between px-4 py-3 text-[12px] font-bold text-red-600 hover:bg-red-50 rounded-lg uppercase tracking-wide transition-all min-h-[44px] focus:outline-none">
+                                        <span>Logout</span>
+                                        <LogOut className="w-4 h-4 opacity-50" />
                                     </button>
                                 </li>
                             </ul>

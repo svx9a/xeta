@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, Shield, Cpu, Activity, Zap, CheckCircle, Copy, Code2, Layers, CpuIcon, Globe, Lock } from 'lucide-react';
+import { Terminal, Shield, Cpu, Activity, Zap, CheckCircle, Copy, Code2, Globe, Lock, CpuIcon } from 'lucide-react';
 
 const CodeBlock: React.FC<{ code: string; language?: string }> = ({ code }) => {
     const [copied, setCopied] = useState(false);
@@ -12,17 +12,17 @@ const CodeBlock: React.FC<{ code: string; language?: string }> = ({ code }) => {
 
     return (
         <div className="relative group/code my-8">
-            <div className="absolute inset-0 bg-[#FFD700] rounded-3xl -m-[1px] opacity-0 group-hover/code:opacity-10 transition-opacity blur-sm" />
-            <div className="absolute top-0 right-12 px-4 py-1.5 bg-slate-100 border-x border-b border-slate-200 rounded-b-xl text-[10px] font-black text-blue-600 uppercase tracking-widest italic z-10 backdrop-blur-md">
+            <div className="absolute inset-0 bg-[var(--primary-azure)] rounded-3xl -m-[1px] opacity-0 group-hover/code:opacity-10 transition-opacity blur-sm" />
+            <div className="absolute top-0 right-12 px-4 py-1.5 bg-[var(--bg-secondary)] border-x border-b border-[var(--border-subtle)] rounded-b-xl text-[10px] font-black text-[var(--primary-azure)] uppercase tracking-widest z-10 backdrop-blur-md">
                 Protocol Buffer v3
             </div>
-            <pre className="bg-white text-[#B3CEE5] p-10 rounded-3xl overflow-x-auto font-mono text-sm leading-relaxed border-2 border-slate-200 shadow-[inner_0_4px_30px_rgba(0,0,0,0.5)] relative overflow-hidden">
-                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#1E4A6F] to-transparent opacity-40" />
+            <pre className="bg-slate-900 text-slate-300 p-10 rounded-3xl overflow-x-auto font-mono text-sm leading-relaxed border-2 border-slate-800 shadow-2xl relative overflow-hidden">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[var(--primary-azure)] to-transparent opacity-40" />
                 <code>{code}</code>
             </pre>
             <button
                 onClick={copyToClipboard}
-                className="absolute top-6 right-6 p-4 bg-slate-100 hover:bg-[#FFD700] text-slate-800/40 hover:text-slate-800 rounded-[22px] transition-all border border-slate-200 group/btn shadow-2xl active:scale-95"
+                className="absolute top-6 right-6 p-4 bg-white/5 hover:bg-[var(--primary-azure)]/20 text-white/40 hover:text-white rounded-[22px] transition-all border border-white/10 group/btn shadow-2xl active:scale-95"
             >
                 {copied ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />}
             </button>
@@ -47,53 +47,53 @@ const TracingGuide: React.FC = () => {
     };
 
     return (
-        <div className="bg-white rounded-[40px] sm:rounded-[70px] p-8 sm:p-16 space-y-12 sm:space-y-20 animate-fadeIn max-w-5xl mx-auto border-2 border-slate-200 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-[80vw] h-[80vw] sm:w-[500px] sm:h-[500px] bg-[#1E4A6F] opacity-10 rounded-full -mr-32 -mt-32 blur-[100px] pointer-events-none" />
+        <div className="bg-[var(--bg-primary)] rounded-[40px] sm:rounded-[70px] p-8 sm:p-16 space-y-12 sm:space-y-20 animate-fadeIn max-w-5xl mx-auto border-2 border-[var(--border-subtle)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[80vw] h-[80vw] sm:w-[500px] sm:h-[500px] bg-[var(--primary-azure)] opacity-5 rounded-full -mr-32 -mt-32 blur-[100px] pointer-events-none" />
 
             {/* Header Strategy */}
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-12 relative z-10">
                 <div className="space-y-6">
                     <div className="flex items-center gap-6">
-                        <div className="p-6 bg-slate-100 rounded-[35px] shadow-2xl skew-x-[-15deg] border-2 border-slate-200 hover:rotate-6 transition-transform group">
-                            <CpuIcon className="w-14 h-14 text-[#FFD700] group-hover:scale-110 transition-transform" />
+                        <div className="p-6 bg-[var(--bg-secondary)] rounded-[35px] shadow-2xl skew-x-[-15deg] border-2 border-[var(--border-subtle)] hover:rotate-6 transition-transform group">
+                            <CpuIcon className="w-14 h-14 text-[var(--primary-azure)] group-hover:scale-110 transition-transform" />
                         </div>
-                        <div className="h-2 w-20 bg-[#FFD700] rounded-full hidden sm:block" />
+                        <div className="h-2 w-20 bg-[var(--primary-azure)] rounded-full hidden sm:block" />
                     </div>
                     <div>
-                        <h2 className="text-4xl sm:text-6xl font-black text-slate-800 uppercase tracking-tighter italic leading-none">Intelligence <span className="text-[#FFD700]">Tracing</span></h2>
-                        <p className="text-[9px] sm:text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] sm:tracking-[0.5em] mt-6 italic">XETA-PHOENIX OBSERVABILITY INFRASTRUCTURE</p>
+                        <h2 className="text-4xl sm:text-6xl font-black text-[var(--text-primary)] uppercase tracking-tighter italic leading-none">Intelligence <span className="text-[var(--primary-azure)]">Tracing</span></h2>
+                        <p className="text-[9px] sm:text-[10px] font-black text-[var(--text-secondary)]/60 uppercase tracking-[0.3em] sm:tracking-[0.5em] mt-6 italic">XETA-PHOENIX OBSERVABILITY INFRASTRUCTURE</p>
                     </div>
                 </div>
 
-                <div className="flex bg-slate-100 p-2.5 rounded-[30px] border border-slate-200 shadow-2xl relative group">
-                    <div className={`absolute top-2.5 bottom-2.5 w-[calc(50%-10px)] bg-[#FFD700] rounded-[22px] transition-all duration-700 shadow-2xl ${lang === 'ts' ? 'left-[calc(50%+5px)]' : 'left-2.5'}`} />
+                <div className="flex bg-[var(--bg-secondary)] p-2.5 rounded-[30px] border border-[var(--border-subtle)] shadow-2xl relative group">
+                    <div className={`absolute top-2.5 bottom-2.5 w-[calc(50%-10px)] bg-[var(--primary-azure)] rounded-[22px] transition-all duration-700 shadow-2xl ${lang === 'ts' ? 'left-[calc(50%+5px)]' : 'left-2.5'}`} />
                     <button
                         onClick={() => setLang('py')}
-                        className={`px-10 py-5 rounded-[22px] text-xs font-black uppercase tracking-widest italic z-10 transition-colors duration-500 flex items-center gap-3 ${lang === 'py' ? 'text-slate-800' : 'text-blue-600'}`}
+                        className={`px-10 py-5 rounded-[22px] text-xs font-black uppercase tracking-widest italic z-10 transition-colors duration-500 flex items-center gap-3 ${lang === 'py' ? 'text-white' : 'text-[var(--text-secondary)]/40 hover:text-[var(--text-primary)]'}`}
                     >
                         <Code2 className="w-5 h-5" />
                         Python
                     </button>
                     <button
                         onClick={() => setLang('ts')}
-                        className={`px-10 py-5 rounded-[22px] text-xs font-black uppercase tracking-widest italic z-10 transition-colors duration-500 flex items-center gap-3 ${lang === 'ts' ? 'text-slate-800' : 'text-blue-600'}`}
+                        className={`px-10 py-5 rounded-[22px] text-xs font-black uppercase tracking-widest italic z-10 transition-colors duration-500 flex items-center gap-3 ${lang === 'ts' ? 'text-white' : 'text-[var(--text-secondary)]/40 hover:text-[var(--text-primary)]'}`}
                     >
-                        <Layers className="w-5 h-5" />
+                        <Activity className="w-5 h-5" />
                         TypeScript
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-16 relative z-10">
                 <section className="space-y-10 group">
                     <div className="relative">
-                        <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-[#FFD700] opacity-0 group-hover:opacity-100 transition-all" />
+                        <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-[var(--primary-azure)] opacity-0 group-hover:opacity-100 transition-all" />
                         <div className="flex items-center gap-6">
-                            <span className="text-5xl font-black text-slate-800/5 group-hover:text-[#FFD700]/20 transition-colors duration-700 italic">01</span>
-                            <h3 className="text-3xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">Core Injection</h3>
+                            <span className="text-5xl font-black text-[var(--text-primary)]/5 group-hover:text-[var(--primary-azure)]/20 transition-colors duration-700 italic">01</span>
+                            <h3 className="text-3xl font-black text-[var(--text-primary)] uppercase italic tracking-tighter leading-none">Core Injection</h3>
                         </div>
                     </div>
-                    <p className="text-xl text-[#B3CEE5] font-medium italic leading-relaxed">
+                    <p className="text-xl text-[var(--text-secondary)]/60 font-medium italic leading-relaxed">
                         Deploy the high-fidelity telemetry stack to your node architecture.
                     </p>
                     <CodeBlock code={snippets[lang].install} />
@@ -101,56 +101,59 @@ const TracingGuide: React.FC = () => {
 
                 <section className="space-y-10 group">
                     <div className="relative">
-                        <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-[#FFD700] opacity-0 group-hover:opacity-100 transition-all" />
+                        <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-[var(--primary-azure)] opacity-0 group-hover:opacity-100 transition-all" />
                         <div className="flex items-center gap-6">
-                            <span className="text-5xl font-black text-slate-800/5 group-hover:text-[#FFD700]/20 transition-colors duration-700 italic">02</span>
-                            <h3 className="text-3xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">Neural Handshake</h3>
+                            <span className="text-5xl font-black text-[var(--text-primary)]/5 group-hover:text-[var(--primary-azure)]/20 transition-colors duration-700 italic">02</span>
+                            <h3 className="text-3xl font-black text-[var(--text-primary)] uppercase italic tracking-tighter leading-none">Neural Handshake</h3>
                         </div>
                     </div>
-                    <p className="text-xl text-[#B3CEE5] font-medium italic leading-relaxed">
+                    <p className="text-xl text-[var(--text-secondary)]/60 font-medium italic leading-relaxed">
                         Authorize the secure gateway to export intelligence shards to Phoenix.
                     </p>
                     <CodeBlock code={snippets[lang].setup} />
                 </section>
+
+                <section className="space-y-10 group">
+                    <div className="relative">
+                        <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-[var(--primary-azure)] opacity-0 group-hover:opacity-100 transition-all" />
+                        <div className="flex items-center gap-6">
+                            <span className="text-5xl font-black text-[var(--text-primary)]/5 group-hover:text-[var(--primary-azure)]/20 transition-colors duration-700 italic">03</span>
+                            <h3 className="text-3xl font-black text-[var(--text-primary)] uppercase italic tracking-tighter leading-none">Linear Observation</h3>
+                        </div>
+                    </div>
+                    <p className="text-xl text-[var(--text-secondary)]/60 font-medium italic leading-relaxed max-w-3xl">
+                        Wrap critical consensus logic to record depth, latency, and full asset lineage across the fabric.
+                    </p>
+                    <CodeBlock code={snippets[lang].manual} />
+                </section>
             </div>
 
-            <section className="space-y-10 relative z-10 group">
-                <div className="flex items-center gap-8">
-                    <span className="text-6xl font-black text-slate-800/5 group-hover:text-[#FFD700]/20 transition-colors duration-700 italic">03</span>
-                    <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">Linear Observation</h3>
-                </div>
-                <p className="text-xl text-[#B3CEE5] font-medium italic leading-relaxed max-w-3xl">
-                    Wrap critical consensus logic to record depth, latency, and full asset lineage across the fabric.
-                </p>
-                <CodeBlock code={snippets[lang].manual} />
-            </section>
-
             {/* CTA Strategy */}
-            <div className="p-8 sm:p-16 bg-slate-100 rounded-[40px] sm:rounded-[60px] text-slate-800 relative overflow-hidden group/cta shadow-2xl border border-slate-200">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1E4A6F] to-transparent opacity-10 pointer-events-none" />
-                <div className="absolute top-0 right-0 w-[60vw] h-[60vw] sm:w-[400px] sm:h-[400px] bg-[#FFD700] opacity-5 rounded-full blur-[100px] group-hover/cta:scale-150 transition-all duration-1000" />
+            <div className="p-8 sm:p-16 bg-[var(--bg-secondary)] rounded-[40px] sm:rounded-[60px] text-[var(--text-primary)] relative overflow-hidden group/cta shadow-2xl border border-[var(--border-subtle)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-azure)] to-transparent opacity-5 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-[60vw] h-[60vw] sm:w-[400px] sm:h-[400px] bg-[var(--primary-azure)] opacity-5 rounded-full blur-[100px] group-hover/cta:scale-150 transition-all duration-1000" />
 
-                <div className="relative z-10 flex flex-col xl:row items-center justify-between gap-12">
+                <div className="relative z-10 flex flex-col xl:flex-row items-center justify-between gap-12">
                     <div className="flex items-center gap-10">
-                        <div className="p-8 bg-slate-100 rounded-[35px] border border-slate-200 shadow-2xl relative">
-                            <div className="absolute inset-0 bg-[#FFD700] rounded-full blur-2xl opacity-10 animate-pulse" />
-                            <Terminal className="w-16 h-16 text-[#FFD700] relative z-10" />
+                        <div className="p-8 bg-[var(--bg-primary)] rounded-[35px] border border-[var(--border-subtle)] shadow-2xl relative">
+                            <div className="absolute inset-0 bg-[var(--primary-azure)] rounded-full blur-2xl opacity-10 animate-pulse" />
+                            <Terminal className="w-16 h-16 text-[var(--primary-azure)] relative z-10" />
                         </div>
                         <div>
                             <p className="text-5xl font-black italic tracking-tighter uppercase leading-none mb-4">Gateway Online</p>
                             <div className="flex items-center gap-4">
-                                <Globe className="w-5 h-5 text-emerald-400" />
-                                <p className="text-xs font-black text-blue-600 italic uppercase tracking-[0.5em]">Global Monitoring Mesh Active</p>
+                                <Globe className="w-5 h-5 text-emerald-500" />
+                                <p className="text-xs font-black text-[var(--primary-azure)] italic uppercase tracking-[0.5em]">Global Monitoring Mesh Active</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:row gap-8 w-full xl:w-auto">
-                        <button className="px-14 py-8 bg-[#FFD700] text-slate-800 rounded-[30px] font-black uppercase tracking-[0.3em] italic hover:scale-[1.03] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4">
+                    <div className="flex flex-col sm:flex-row gap-8 w-full xl:w-auto">
+                        <button className="px-14 py-8 bg-[var(--primary-azure)] text-white rounded-[30px] font-black uppercase tracking-[0.3em] italic hover:scale-[1.03] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4">
                             <CheckCircle className="w-6 h-6" />
                             Launch Console
                         </button>
-                        <button className="px-14 py-8 bg-slate-100 text-slate-800 border-2 border-slate-200 rounded-[30px] font-black uppercase tracking-[0.3em] italic hover:bg-slate-100 transition-all flex items-center justify-center gap-4 shadow-2xl">
+                        <button className="px-14 py-8 bg-[var(--bg-primary)] text-[var(--text-primary)] border-2 border-[var(--border-subtle)] rounded-[30px] font-black uppercase tracking-[0.3em] italic hover:bg-[var(--bg-primary)] transition-all flex items-center justify-center gap-4 shadow-2xl">
                             <Lock className="w-6 h-6 opacity-40" />
                             Access Logs
                         </button>
