@@ -32,7 +32,7 @@
     "svgo": "^4.0.1",
     "tsx": "^4.21.0",
     "ws": "^8.19.0",
-    "@google/genai": "^0.23.0"
+    "@google/genai": "^1.44.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250224.0",
