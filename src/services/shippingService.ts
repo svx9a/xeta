@@ -1,4 +1,17 @@
-import { SHIPPING_BASE_RATES, LOGISTICS_PARTNERS, AseanCountry } from './commerceConfig';
+type AseanCountry = 'Brunei' | 'Cambodia' | 'Indonesia' | 'Laos' | 'Malaysia' | 'Myanmar' | 'Philippines' | 'Singapore' | 'Thailand' | 'Vietnam';
+
+const SHIPPING_BASE_RATES: Record<AseanCountry, number> = {
+  Brunei: 8, Cambodia: 7, Indonesia: 6, Laos: 7, Malaysia: 5,
+  Myanmar: 9, Philippines: 6, Singapore: 4, Thailand: 4, Vietnam: 5,
+};
+
+const LOGISTICS_PARTNERS: Record<AseanCountry, string[]> = {
+  Brunei: ['DHL','Aramex'], Cambodia: ['J&T Express','DHL'],
+  Indonesia: ['JNE','J&T Express','SiCepat','DHL'], Laos: ['DHL','EMS'],
+  Malaysia: ['Pos Laju','J&T Express','DHL'], Myanmar: ['DHL','EMS'],
+  Philippines: ['LBC','J&T Express','DHL'], Singapore: ['SingPost','Ninja Van','DHL'],
+  Thailand: ['Thailand Post','Flash Express','Kerry','DHL'], Vietnam: ['VNPost','GHTK','Ninja Van','DHL'],
+};
 
 export type Address = string;
 

@@ -3,7 +3,6 @@ import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { LinkIcon, CheckCircleIcon } from '../components/icons';
 import { Page } from '../types';
-import { Zap, Activity } from 'lucide-react';
 
 interface Platform {
     logoUrl: string;
@@ -21,55 +20,47 @@ interface PlatformCardProps {
 
 const PlatformCard: React.FC<PlatformCardProps> = ({ platform, isConnected, onConnect, onManage }) => {
     const { t } = useTranslation();
+    
+    const buttonBaseClasses = "inline-flex items-center justify-center gap-2 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all duration-200 hover:scale-105 w-full max-w-[160px]";
 
-    const buttonBaseClasses = "inline-flex items-center justify-center px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border-2 min-w-[140px]";
+    const handleConnectClick = () => {
+        onConnect(platform.name);
+    };
 
     return (
-        <Card padding="p-10" className={`flex flex-col items-center text-center transition-all duration-300 relative bg-white rounded-3xl shadow-sm border ${isConnected ? 'border-[#3B82F6]' : 'border-slate-100 hover:shadow-md'}`}>
+        <Card className={`flex flex-col items-center text-center transition-all duration-300 relative ${isConnected ? 'ring-2 ring-primary/20 border-primary' : ''}`}>
             {isConnected && (
-                <div className="absolute top-6 right-6 text-[#10B981]">
+                 <div className="absolute top-4 right-4 text-emerald-500">
                     <CheckCircleIcon className="w-6 h-6" />
-                </div>
+                 </div>
             )}
-
-            <div className="w-24 h-24 flex items-center justify-center bg-slate-50 rounded-2xl mb-8">
-                <img src={platform.logoUrl} alt={`${platform.name} logo`} className="max-h-12 max-w-[48px] object-contain" />
+            <div className="w-20 h-20 flex items-center justify-center bg-white rounded-2xl border border-border-color/60 shadow-sm mb-6">
+                <img src={platform.logoUrl} alt={`${platform.name} logo`} className="max-h-12 max-w-[48px]" />
             </div>
-
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">{platform.name}</h3>
-            <p className="text-sm text-slate-500 mb-10 max-w-[260px] leading-relaxed">{platform.description}</p>
-
-            <div className="flex flex-col gap-3 mt-auto">
-                {isConnected ? (
-                    <>
-                        <button
-                            onClick={() => onManage(platform.name)}
-                            className={`${buttonBaseClasses} bg-white border-slate-200 text-slate-900 hover:bg-slate-50`}
-                        >
-                            {t('manage')}
-                        </button>
-                        <button
-                            onClick={() => onConnect(platform.name)}
-                            className={`${buttonBaseClasses} border-transparent text-[#3B82F6] hover:bg-blue-50`}
-                        >
-                            {t('disconnect')}
-                        </button>
-                    </>
-                ) : (
-                    <button
-                        onClick={() => onConnect(platform.name)}
-                        className={`${buttonBaseClasses} bg-white border-[#3B82F6] text-[#3B82F6] hover:bg-blue-50`}
-                    >
-                        <LinkIcon className="w-4 h-4 mr-2" />
-                        {t('connect')}
+            <h3 className="text-xl font-extrabold text-text-primary tracking-tight">{platform.name}</h3>
+            <p className="text-xs font-medium text-text-secondary my-4 flex-grow max-w-[240px] leading-relaxed">{platform.description}</p>
+            
+            {isConnected ? (
+                <div className="flex flex-col sm:flex-row items-center gap-3 mt-4 w-full justify-center">
+                    <button onClick={() => onManage(platform.name)} className={`${buttonBaseClasses} satin-effect text-white shadow-satin`}>
+                        {t('manage')}
                     </button>
-                )}
-            </div>
+                    <button onClick={handleConnectClick} className={`${buttonBaseClasses} bg-white text-text-secondary border border-border-color/60 hover:bg-gray-50`}>
+                        {t('disconnect')}
+                    </button>
+                </div>
+            ) : (
+                <button onClick={handleConnectClick} className={`${buttonBaseClasses} ${platform.isFeatured ? 'satin-effect text-white shadow-satin' : 'bg-white text-text-secondary border border-border-color/60 hover:bg-gray-50'}`}>
+                    <LinkIcon className="w-4 h-4"/>
+                    {t('connect')}
+                </button>
+            )}
         </Card>
     );
 }
 
 const PluginsPage: React.FC<{ setCurrentPage: (page: Page) => void }> = ({ setCurrentPage }) => {
+    const { t } = useTranslation();
     const [connectedPlatforms, setConnectedPlatforms] = useState<Record<string, boolean>>({ Shopify: true });
 
     const handlePlatformConnect = (platformName: string) => {
@@ -83,6 +74,7 @@ const PluginsPage: React.FC<{ setCurrentPage: (page: Page) => void }> = ({ setCu
         if (platformName === 'Shopify') {
             setCurrentPage('integrations');
         } else {
+            // Placeholder for other integrations in the future
             alert(`Managing ${platformName} is not yet implemented.`);
         }
     };
@@ -112,18 +104,13 @@ const PluginsPage: React.FC<{ setCurrentPage: (page: Page) => void }> = ({ setCu
     ];
 
     return (
-        <div className="animate-fadeIn max-w-5xl w-full space-y-12 pb-20 mx-auto px-6">
-            <div className="pt-10 pb-8 text-center sm:text-left">
-                <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900">
-                    Connect Your Platform
-                </h1>
-            </div>
-
+        <div className="animate-fadeIn max-w-6xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-text-primary mb-8">{t('connectYourPlatform')}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {platforms.map(platform => (
-                    <PlatformCard
-                        key={platform.name}
-                        platform={platform}
+                    <PlatformCard 
+                        key={platform.name} 
+                        platform={platform} 
                         isConnected={!!connectedPlatforms[platform.name]}
                         onConnect={handlePlatformConnect}
                         onManage={handleManagePlatform}

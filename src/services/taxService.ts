@@ -1,24 +1,21 @@
-import { TAX_RATES, AseanCountry } from './commerceConfig';
+type AseanCountry = 'Thailand' | 'Vietnam' | 'Indonesia' | 'Singapore' | 'Malaysia';
 
-export type TaxResult = {
-  country: AseanCountry;
-  type: 'VAT' | 'GST';
-  rate: number;
-  taxableAmount: number;
-  taxAmount: number;
-  totalAmount: number;
+const VAT_RATES: Record<AseanCountry, number> = {
+  Thailand: 0.07,
+  Vietnam: 0.10,
+  Indonesia: 0.11,
+  Singapore: 0.09,
+  Malaysia: 0.06,
 };
 
-export function calculateTax(country: AseanCountry, amount: number): TaxResult {
-  const cfg = TAX_RATES[country];
-  const rate = cfg.rate;
+export const calculateTax = (country: AseanCountry, amount: number) => {
+  const rate = VAT_RATES[country] || 0.07;
   const tax = +(amount * rate).toFixed(2);
   return {
-    country,
-    type: cfg.type,
-    rate,
-    taxableAmount: amount,
-    taxAmount: tax,
-    totalAmount: +(amount + tax).toFixed(2),
+    subtotal: amount,
+    tax,
+    total: +(amount + tax).toFixed(2),
+    rate: `${(rate * 100).toFixed(0)}%`,
+    country
   };
-}
+};

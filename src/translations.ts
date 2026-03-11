@@ -1,36 +1,34 @@
 export const translations = {
     en: {
         // Sidebar
-        home: 'Dashboard',
-        payments: 'Transactions',
+        home: 'Home',
+        payments: 'Payments',
         payouts: 'Payouts',
-        plugins: 'Extensions',
+        plugins: 'Plugins',
         integrations: 'Integrations',
         developer: 'Developer',
-        reports: 'Analytics',
+        reports: 'Reports',
         settings: 'Settings',
         account: 'Account',
-        viewAll: 'View All',
         quantumLedgerSecured: 'Quantum Ledger Secured',
-
+        
         // Header
-        sandboxMode: 'Sandbox Environment',
-        productionMode: 'Production Environment',
-        providerAdmin: 'Administrator',
+        sandboxMode: 'Sandbox Mode',
+        productionMode: 'Production Mode',
+        providerAdmin: 'Provider Admin',
         viewProfile: 'View Profile',
-        logout: 'Sign Out',
-        loginTitle: 'XETA ACCESS',
-
+        logout: 'Log Out',
+        
         // Home Page
-        todaySoFar: 'Revenue to Date',
-        yesterday: 'Previous Day',
-        thisMonthSoFar: 'Month to Date',
-        lastMonth: 'Prior Month',
+        todaySoFar: 'Today so far',
+        yesterday: 'Yesterday',
+        thisMonthSoFar: 'This Month so far',
+        lastMonth: 'Last Month',
         revenueAnalytics: 'Revenue Analytics',
         revenue: 'Revenue',
 
         // Payments Page
-        allPayments: 'Transaction History',
+        allPayments: 'All Payments',
         transactionDetails: 'Transaction Details',
         orderId: 'Order ID',
         order: 'Order',
@@ -42,18 +40,18 @@ export const translations = {
         customer: 'Customer',
         email: 'Email',
         card: 'Card',
-        aiRisk: 'Risk Assessment',
-        riskReason: 'Assessment Rationale',
+        aiRisk: 'AI Risk',
+        riskReason: 'Risk Reason',
         action: 'Action',
         view: 'View',
-        assessRisk: 'Evaluate Risk',
-        assessing: 'Evaluating Risk...',
-        aiRiskAssessmentDisabled: 'Risk assessment disabled.',
-        processing: 'Processing Transaction...',
+        assessRisk: 'Assess Risk',
+        assessing: 'Assessing...',
+        aiRiskAssessmentDisabled: 'AI assessment disabled.',
+        processing: 'Processing...',
         void: 'Void',
         refund: 'Refund',
         capture: 'Capture',
-
+        
         // Payment Statuses
         authorized: 'Authorized',
         captured: 'Captured',
@@ -61,55 +59,47 @@ export const translations = {
         partially_refunded: 'Partially Refunded',
         voided: 'Voided',
         failed: 'Failed',
-
-        // Ledger Header
-        method: 'Payment Method',
-        valuation: 'Transaction Value',
-        riskTier: 'Risk Level',
-        indexing: 'Processing Status',
-        scanning: 'Scanning Ledger...',
-        runAudit: 'Execute Audit',
-
+        
         // Refund Modal
-        maxRefundable: 'Maximum Refundable Amount',
+        maxRefundable: 'Maximum refundable amount',
         refundAmount: 'Refund Amount',
         cancel: 'Cancel',
-        errorAmountExceeds: 'Refund amount cannot exceed {{max}}',
-        errorAmountPositive: 'Refund amount must be positive',
+        errorAmountExceeds: 'Amount cannot exceed {{max}}',
+        errorAmountPositive: 'Amount must be positive',
         errorInvalidAmount: 'Please enter a valid refund amount.',
-
+        
         // Developer Page
-        developerTools: 'Development Tools',
-        environmentSettings: 'Environment Configuration',
-        productionModeDesc: 'Activate production mode to process real transactions with live API credentials. Proceed with caution.',
-        liveActivity: 'Recent Activity',
+        developerTools: 'Developer Tools',
+        environmentSettings: 'Environment Settings',
+        productionModeDesc: 'Enable for live transactions. This will use live API keys. Use with caution.',
+        liveActivity: 'Live Activity',
         event: 'Event',
         description: 'Description',
         timestamp: 'Timestamp',
-        succeeded: 'Completed',
+        succeeded: 'Succeeded',
         pending: 'Pending',
-        apiKeys: 'API Credentials',
+        apiKeys: 'API Keys',
         sandboxKey: 'Sandbox Key',
-        liveKey: 'Production Key',
-        sandboxKeyDesc: 'Utilize this key for testing in your development environment.',
+        liveKey: 'Live Key',
+        sandboxKeyDesc: 'Use this key for testing purposes in your development environment.',
         liveKeyDesc: 'Use this key for live transactions in your production environment.',
         apiStatus: 'API Status',
-        pingAPI: 'Test API Connectivity',
-        pinging: 'Testing Connectivity...',
-        apiOperational: 'API connectivity confirmed. Response latency: 45ms',
-
+        pingAPI: 'Ping API',
+        pinging: 'Pinging...',
+        apiOperational: 'API is operational. Latency: 45ms',
+        
         // Settings Page
-        securitySettings: 'Security Configuration',
+        securitySettings: 'Security Settings',
         biometricAuth: 'Biometric Authentication',
-        biometricDesc: 'Leverage biometric verification for enhanced account security.',
-        twoFactorAuth: 'Multi-Factor Authentication',
-        twoFactorDesc: 'Implement multi-factor authentication for additional account protection.',
+        biometricDesc: 'Use fingerprint or face recognition for secure login.',
+        twoFactorAuth: 'Two-Factor Authentication (2FA)',
+        twoFactorDesc: 'Add an extra layer of security to your account.',
         enable: 'Enable',
         enabled: 'Enabled',
-        setup2FA: 'Configure Multi-Factor Authentication',
-        scanQrCode: 'Scan the QR code using your authenticator application.',
-        enterVerificationCode: 'Enter the 6-digit verification code provided.',
-        verifyEnable: 'Verify and Enable',
+        setup2FA: 'Set Up Two-Factor Authentication',
+        scanQrCode: 'Scan the QR code with your authenticator app.',
+        enterVerificationCode: 'Then, enter the 6-digit verification code.',
+        verifyEnable: 'Verify & Enable',
 
         // Plugins Page
         connectYourPlatform: 'Connect Your Platform',
@@ -135,15 +125,15 @@ export const translations = {
         confirmDisconnect: 'Yes, Disconnect',
 
         // Reports Page
-        generateReports: 'Generate Analytics Reports',
-        reportType: 'Report Category',
+        generateReports: 'Generate Reports',
+        reportType: 'Report Type',
         transactionHistory: 'Transaction History',
         payoutSummary: 'Payout Summary',
         dateRange: 'Date Range',
         format: 'Format',
-        generateReport: 'Create Report',
-        generating: 'Creating Report...',
-        reportReady: 'Report generated successfully!',
+        generateReport: 'Generate Report',
+        generating: 'Generating...',
+        reportReady: 'Your report is ready!',
         download: 'Download',
 
         // Payouts Page
@@ -156,7 +146,7 @@ export const translations = {
         // Payout Statuses
         completed: 'Completed',
         in_transit: 'In Transit',
-
+        
         // Account Page
         profile: 'Profile',
         role: 'Role',
@@ -167,13 +157,9 @@ export const translations = {
         promptPay: 'PromptPay',
         qrPayment: 'QR Payment',
         paymentMethod: 'Payment Method',
-        credit_card: 'Credit Card',
-        promptpay: 'PromptPay',
-        qr_code: 'QR Code',
-        bank_transfer: 'Bank Transfer',
         pdpaCompliance: 'PDPA Compliance',
         privacyPolicy: 'Privacy Policy',
-        acceptTerms: 'I acknowledge and agree to the Terms of Service and Privacy Policy.',
+        acceptTerms: 'I accept the terms and conditions and privacy policy.',
         aseanIntegration: 'ASEAN Integration',
         multiCurrency: 'Multi-Currency Support',
         crossBorder: 'Cross-Border Transactions',
@@ -189,15 +175,6 @@ export const translations = {
 
         // Coming Soon
         comingSoon: 'Coming Soon...',
-
-        // Shipping
-        shippingInfo: 'Shipping Information',
-        fullName: 'Full Name',
-        phoneNumber: 'Phone Number',
-        address: 'Address',
-        city: 'City / Province',
-        postalCode: 'Postal Code',
-        proceedToPayment: 'Proceed to Payment',
     },
     th: {
         // Sidebar
@@ -210,17 +187,15 @@ export const translations = {
         reports: 'รายงาน',
         settings: 'การตั้งค่า',
         account: 'บัญชี',
-        viewAll: 'ดูทั้งหมด',
         quantumLedgerSecured: 'ปลอดภัยด้วยควอนตัมเลดเจอร์',
-
+        
         // Header
         sandboxMode: 'โหมดทดสอบ',
         productionMode: 'โหมดใช้งานจริง',
         providerAdmin: 'ผู้ดูแลระบบ',
         viewProfile: 'ดูโปรไฟล์',
         logout: 'ออกจากระบบ',
-        loginTitle: 'XETA ACCESS',
-
+        
         // Home Page
         todaySoFar: 'วันนี้',
         yesterday: 'เมื่อวาน',
@@ -253,7 +228,7 @@ export const translations = {
         void: 'ยกเลิก',
         refund: 'คืนเงิน',
         capture: 'เรียกเก็บเงิน',
-
+        
         // Payment Statuses
         authorized: 'อนุมัติแล้ว',
         captured: 'เรียกเก็บแล้ว',
@@ -262,14 +237,6 @@ export const translations = {
         voided: 'ยกเลิกแล้ว',
         failed: 'ล้มเหลว',
 
-        // Ledger Header
-        method: 'วิธีการ',
-        valuation: 'มูลค่า',
-        riskTier: 'ระดับความเสี่ยง',
-        indexing: 'การจัดทำดัชนี',
-        scanning: 'กำลังสแกน...',
-        runAudit: 'เริ่มตรวจสอบ',
-
         // Refund Modal
         maxRefundable: 'จำนวนเงินสูงสุดที่สามารถคืนได้',
         refundAmount: 'จำนวนเงินที่คืน',
@@ -277,7 +244,7 @@ export const translations = {
         errorAmountExceeds: 'จำนวนเงินต้องไม่เกิน {{max}}',
         errorAmountPositive: 'จำนวนเงินต้องเป็นบวก',
         errorInvalidAmount: 'กรุณาใส่จำนวนเงินที่ถูกต้อง',
-
+        
         // Developer Page
         developerTools: 'เครื่องมือสำหรับนักพัฒนา',
         environmentSettings: 'การตั้งค่าสภาพแวดล้อม',
@@ -310,7 +277,7 @@ export const translations = {
         scanQrCode: 'สแกน QR code ด้วยแอปยืนยันตัวตนของคุณ',
         enterVerificationCode: 'จากนั้น ป้อนรหัสยืนยัน 6 หลัก',
         verifyEnable: 'ยืนยันและเปิดใช้งาน',
-
+        
         // Plugins Page
         connectYourPlatform: 'เชื่อมต่อแพลตฟอร์มของคุณ',
         connect: 'เชื่อมต่อ',
@@ -345,7 +312,7 @@ export const translations = {
         generating: 'กำลังสร้าง...',
         reportReady: 'รายงานของคุณพร้อมแล้ว!',
         download: 'ดาวน์โหลด',
-
+        
         // Payouts Page
         payoutHistory: 'ประวัติการจ่ายเงิน',
         nextPayout: 'การจ่ายเงินครั้งถัดไป',
@@ -367,10 +334,6 @@ export const translations = {
         promptPay: 'พร้อมเพย์',
         qrPayment: 'ชำระเงินผ่าน QR',
         paymentMethod: 'วิธีการชำระเงิน',
-        credit_card: 'บัตรเครดิต/เดบิต',
-        promptpay: 'พร้อมเพย์',
-        qr_code: 'รหัส QR',
-        bank_transfer: 'โอนเงินผ่านธนาคาร',
         pdpaCompliance: 'ความยินยอมตาม PDPA',
         privacyPolicy: 'นโยบายความเป็นส่วนตัว',
         acceptTerms: 'ฉันยอมรับข้อกำหนดและเงื่อนไขและนโยบายความเป็นส่วนตัว',
@@ -389,15 +352,6 @@ export const translations = {
 
         // Coming Soon
         comingSoon: 'เร็วๆ นี้...',
-
-        // Shipping
-        shippingInfo: 'ข้อมูลส่วนตัวและการจัดส่ง',
-        fullName: 'ชื่อ-นามสกุล',
-        phoneNumber: 'เบอร์โทรศัพท์',
-        address: 'ที่อยู่',
-        city: 'จังหวัด / อำเภอ',
-        postalCode: 'รหัสไปรษณีย์',
-        proceedToPayment: 'ดำเนินการชำระเงิน',
     },
     vi: {
         home: 'Trang chủ',
@@ -446,91 +400,11 @@ export const translations = {
         language: 'Bahasa',
         currency: 'Mata Wang',
         comingSoon: 'Akan Datang...',
-    },
-    fil: {
-        home: 'Home',
-        payments: 'Bayad',
-        payouts: 'Payouts',
-        plugins: 'Plugins',
-        integrations: 'Integrations',
-        developer: 'Developer',
-        reports: 'Ulat',
-        settings: 'Settings',
-        account: 'Account',
-        todaySoFar: 'Ngayong Araw',
-        yesterday: 'Kahapon',
-        thisMonthSoFar: 'Buwan na ito',
-        lastMonth: 'Nakaraang Buwan',
-        revenueAnalytics: 'Analitik ng Kita',
-        revenue: 'Kita',
-        language: 'Wika',
-        currency: 'Salapi',
-        comingSoon: 'Paparating...',
-    },
-    km: {
-        home: 'ទំព័រដើម',
-        payments: 'ការបង់ប្រាក់',
-        payouts: 'ការបង់ប្រាក់ចេញ',
-        plugins: 'កម្មវិធីបន្ថែម',
-        integrations: 'ការបញ្ចូល',
-        developer: 'អ្នកអភិវឌ្ឍ',
-        reports: 'របាយការណ៍',
-        settings: 'ការកំណត់',
-        account: 'គណនី',
-        todaySoFar: 'ថ្ងៃនេះ',
-        yesterday: 'ម្សិលមិញ',
-        thisMonthSoFar: 'ខែនេះ',
-        lastMonth: 'ខែមុន',
-        revenueAnalytics: 'វិភាគប្រាក់ចំណូល',
-        revenue: 'ប្រាក់ចំណូល',
-        language: 'ភាសា',
-        currency: 'រូបិយបណ្ណ',
-        comingSoon: 'មកដល់ឆាប់ៗ...',
-    },
-    lo: {
-        home: 'ໜ້າຫຼັກ',
-        payments: 'ການຈ່າຍເງິນ',
-        payouts: 'ການຈ່າຍອອກ',
-        plugins: 'ປລັກອິນ',
-        integrations: 'ການລວມ',
-        developer: 'ນັກພັດທະນາ',
-        reports: 'ບົດລາຍງານ',
-        settings: 'ການຕັ້ງຄ່າ',
-        account: 'ບັນຊີ',
-        todaySoFar: 'ມື້ນີ້',
-        yesterday: 'ມື້ວານ',
-        thisMonthSoFar: 'ເດືອນນີ້',
-        lastMonth: 'ເດືອນກ່ອນ',
-        revenueAnalytics: 'ວິເຄາະລາຍຮັບ',
-        revenue: 'ລາຍຮັບ',
-        language: 'ພາສາ',
-        currency: 'ສະກຸນເງິນ',
-        comingSoon: 'ຈະມາໄວໆນີ້...',
-    },
-    my: {
-        home: 'ပင်မစာမျက်နှာ',
-        payments: 'ငွေပေးချေမှု',
-        payouts: 'ငွေပေးချေထုတ်',
-        plugins: 'ပလဂ်အင်',
-        integrations: 'ပေါင်းစည်းမှု',
-        developer: 'Developer',
-        reports: 'အစီရင်ခံစာ',
-        settings: 'Settings',
-        account: 'စာရင်း',
-        todaySoFar: 'ယနေ့',
-        yesterday: 'မနေ့က',
-        thisMonthSoFar: 'ယခုလ',
-        lastMonth: 'လပြီးခဲ့သည့်',
-        revenueAnalytics: 'ဝင်ငွေအနယ်ကျင်',
-        revenue: 'ဝင်ငွေ',
-        language: 'ဘာသာ',
-        currency: 'ငွေကြေး',
-        comingSoon: 'မကြာမီ...',
     }
 };
 
 type DeepKeys<T> = T extends object ? {
-    [K in keyof T]-?: `${K & string}` | `${K & string}.${DeepKeys<T[K]>}`
+  [K in keyof T]-?: `${K & string}` | `${K & string}.${DeepKeys<T[K]>}`
 }[keyof T] : "";
 
 export type TranslationKeys = DeepKeys<typeof translations.en>;

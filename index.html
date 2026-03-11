@@ -1,457 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-  <title>XETA PAY // Sovereign Asset Matrix</title>
-
-  <!-- Preload critical resources for god speed -->
-  <link rel="dns-prefetch" href="//fonts.googleapis.com">
-  <link rel="dns-prefetch" href="//fonts.gstatic.com">
-  <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
-
-  <!-- Preconnect to external domains -->
-  <link rel="preconnect" href="https://esm.sh" crossorigin>
-
-  <!-- Preload critical CSS -->
-  <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="/src/index.css">
-  </noscript>
-
-  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Space Grotesk', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-          },
-          colors: {
-            // Mercury & White Theme
-            'mercury': {
-              50: '#FAFAFA',   // Lightest mercury - almost white
-              100: '#F5F5F5',  // Very light mercury
-              200: '#E5E5E5',  // Light mercury
-              300: '#D4D4D4',  // Light medium mercury
-              400: '#A3A3A3',  // Medium mercury
-              500: '#737373',  // True mercury - silver gray
-              600: '#525252',  // Dark mercury
-              700: '#404040',  // Darker mercury
-              800: '#262626',  // Very dark mercury
-              900: '#171717',  // Darkest mercury - near black
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XETA Pay Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
             },
-            'white': {
-              'pure': '#FFFFFF',   // Pure white
-              'soft': '#FEFEFE',   // Soft white
-              'warm': '#FDFDFD',   // Warm white
+            colors: {
+              primary: 'var(--primary)',
+              'primary-light': 'var(--primary-light)',
+              accent: 'var(--accent)',
+              'accent-light': 'var(--accent-light)',
+              background: 'var(--background)',
+              'sidebar-bg': 'var(--sidebar-bg)',
+              'card-bg': 'var(--card-bg)',
+              'text-primary': 'var(--text-primary)',
+              'text-secondary': 'var(--text-secondary)',
+              'border-color': 'var(--border-color)',
             },
-
-            // Semantic colors using mercury/white theme
-            primary: '#737373',        // Mercury-500
-            secondary: '#525252',      // Mercury-600
-            background: '#FFFFFF',     // Pure white
-            surface: '#FAFAFA',        // Mercury-50
-            'surface-hover': '#F5F5F5', // Mercury-100
-
-            // Text colors
-            'text-primary': '#171717',    // Mercury-900
-            'text-secondary': '#525252',  // Mercury-600
-            'text-tertiary': '#A3A3A3',   // Mercury-400
-            'text-inverse': '#FFFFFF',    // Pure white
-
-            // Border colors
-            'border-light': '#E5E5E5',    // Mercury-200
-            'border-medium': '#D4D4D4',   // Mercury-300
-            'border-dark': '#A3A3A3',     // Mercury-400
-
-            // Interactive states
-            'hover-bg': '#F5F5F5',        // Mercury-100
-            'focus-ring': '#A3A3A3',      // Mercury-400
-            'active-bg': '#E5E5E5',       // Mercury-200
-
-            // Status colors - mercury-themed
-            success: '#525252',          // Mercury-600
-            warning: '#737373',          // Mercury-500
-            error: '#404040',            // Mercury-700
-
-            // Legacy support (will be phased out)
-            'sidebar-bg': '#FAFAFA',
-            'border-light': 'rgba(115, 115, 115, 0.08)',
-          },
-          borderRadius: {
-            'xl': '16px',
-            '2xl': '24px',
-            '3xl': '32px',
-          },
-          boxShadow: {
-            'custom': '0 40px 100px rgba(0, 0, 0, 0.05)',
-            'satin': '0 10px 40px rgba(0, 0, 0, 0.05)',
-            'glow': '0 0 20px rgba(0, 0, 0, 0.02)',
+            borderRadius: {
+              'xl': '12px',
+            },
+            boxShadow: {
+              'custom': 'var(--shadow)',
+              'satin': '0 4px 20px rgba(34, 139, 34, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
+            },
+            backgroundImage: {
+              'satin-gradient': 'linear-gradient(135deg, #228B22 0%, #2E8B57 50%, #1B5E20 100%)',
+              'satin-sheen': 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%)',
+            }
           }
         }
       }
-    }
-  </script>
-  <style>
-    :root {
-      /* Mercury & White Theme - Primary Colors */
-      --mercury-50: #FAFAFA;
-      /* Lightest mercury - almost white */
-      --mercury-100: #F5F5F5;
-      /* Very light mercury */
-      --mercury-200: #E5E5E5;
-      /* Light mercury */
-      --mercury-300: #D4D4D4;
-      /* Light medium mercury */
-      --mercury-400: #A3A3A3;
-      /* Medium mercury */
-      --mercury-500: #737373;
-      /* True mercury - silver gray */
-      --mercury-600: #525252;
-      /* Dark mercury */
-      --mercury-700: #404040;
-      /* Darker mercury */
-      --mercury-800: #262626;
-      /* Very dark mercury */
-      --mercury-900: #171717;
-      /* Darkest mercury - near black */
+    </script>
+    <style>
+      :root {
+            --primary: #228B22; /* Forest Green */
+            --primary-light: #2E8B57; /* Sea Green */
+            --accent: #1B5E20; /* Darker Green */
+            --accent-light: #F1F8F1; /* Very light green background */
+            --background: #FFFFFF; /* Clean White */
+            --sidebar-bg: #F8FAF8; /* Subtle off-white */
+            --card-bg: #FFFFFF;
+            --text-primary: #1A241A; /* Dark Green-Black */
+            --text-secondary: #5C6B5C; /* Muted Green-Gray */
+            --border-color: #E2E8E2;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dark {
+            --primary: #2E8B57;
+            --primary-light: #3CB371;
+            --accent: #8FBC8F;
+            --accent-light: #1A2E1A;
+            --background: #0D140D;
+            --sidebar-bg: #141F14;
+            --card-bg: #141F14;
+            --text-primary: #E8F5E8;
+            --text-secondary: #A0B0A0;
+            --border-color: #243324;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
-      /* White variations */
-      --white-pure: #FFFFFF;
-      /* Pure white */
-      --white-soft: #FEFEFE;
-      /* Soft white */
-      --white-warm: #FDFDFD;
-      /* Warm white */
-
-      /* Background colors */
-      --bg-primary: var(--white-pure);
-      /* Main background */
-      --bg-secondary: var(--mercury-50);
-      /* Secondary backgrounds */
-      --bg-tertiary: var(--mercury-100);
-      /* Tertiary backgrounds */
-      --bg-accent: var(--mercury-200);
-      /* Accent backgrounds */
-
-      /* Text colors */
-      --text-primary: var(--mercury-900);
-      /* Primary text */
-      --text-secondary: var(--mercury-600);
-      /* Secondary text */
-      --text-tertiary: var(--mercury-400);
-      /* Tertiary text */
-      --text-inverse: var(--white-pure);
-      /* Text on dark backgrounds */
-
-      /* Border colors */
-      --border-light: var(--mercury-200);
-      /* Light borders */
-      --border-medium: var(--mercury-300);
-      /* Medium borders */
-      --border-dark: var(--mercury-400);
-      /* Dark borders */
-
-      /* Interactive states */
-      --hover-bg: var(--mercury-100);
-      /* Hover backgrounds */
-      --focus-ring: var(--mercury-400);
-      /* Focus ring color */
-      --active-bg: var(--mercury-200);
-      /* Active backgrounds */
-
-      /* Glassmorphism effects */
-      --glass-bg: rgba(255, 255, 255, 0.85);
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --glass-shadow: rgba(255, 255, 255, 0.1);
-
-      /* Enhanced shadows for depth and gloss */
-      --shadow-light: rgba(115, 115, 115, 0.08);
-      --shadow-medium: rgba(115, 115, 115, 0.12);
-      --shadow-dark: rgba(115, 115, 115, 0.16);
-      --shadow-glow: rgba(115, 115, 115, 0.06);
-
-      /* Accent colors - subtle mercury variations */
-      --accent-primary: var(--mercury-500);
-      /* Primary accent */
-      --accent-hover: var(--mercury-600);
-      /* Accent hover */
-      --accent-light: var(--mercury-200);
-      /* Light accent */
-
-      /* Status colors - mercury-themed */
-      --success: var(--mercury-600);
-      /* Success - darker mercury */
-      --warning: var(--mercury-500);
-      /* Warning - medium mercury */
-      --error: var(--mercury-700);
-      /* Error - dark mercury */
-
-      /* Typography */
-      --font-primary: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-    }
-
-    /* Global Responsive Base */
-    html {
-      font-size: 14px;
-      /* Mobile First Base */
-    }
-
-    @media (min-width: 640px) {
-      html {
-        font-size: 15px;
+      .satin-effect {
+        background: linear-gradient(135deg, #228B22 0%, #2E8B57 50%, #1B5E20 100%);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(34, 139, 34, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
-    }
 
-    @media (min-width: 1024px) {
-      html {
-        font-size: 16px;
+      .satin-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          to bottom right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0) 60%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(-45deg);
+        pointer-events: none;
       }
-    }
 
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-secondary);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      margin: 0;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Typography Scale - Mercury & White Theme */
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      color: var(--text-primary);
-      font-family: var(--font-primary);
-      font-weight: 600;
-      line-height: 1.2;
-      margin: 0 0 0.5em 0;
-      letter-spacing: -0.025em;
-    }
-
-    h1 {
-      font-size: 2.25rem;
-      font-weight: 700;
-    }
-
-    h2 {
-      font-size: 1.875rem;
-      font-weight: 600;
-    }
-
-    h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    h4 {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-
-    h5 {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
-
-    h6 {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    p {
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin: 0 0 1em 0;
-    }
-
-    /* Spacing Scale - 8px Base Grid */
-    .space-y-1>*+* {
-      margin-top: 0.25rem;
-    }
-
-    /* 4px */
-    .space-y-2>*+* {
-      margin-top: 0.5rem;
-    }
-
-    /* 8px */
-    .space-y-3>*+* {
-      margin-top: 0.75rem;
-    }
-
-    /* 12px */
-    .space-y-4>*+* {
-      margin-top: 1rem;
-    }
-
-    /* 16px */
-    .space-y-6>*+* {
-      margin-top: 1.5rem;
-    }
-
-    /* 24px */
-    .space-y-8>*+* {
-      margin-top: 2rem;
-    }
-
-    /* 32px */
-    .space-y-12>*+* {
-      margin-top: 3rem;
-    }
-
-    /* 48px */
-    .space-y-16>*+* {
-      margin-top: 4rem;
-    }
-
-    /* 64px */
-
-    /* Component Styling - Enhanced Glassmorphism */
-    .btn-primary {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      color: var(--mercury-700);
-      border: 1px solid var(--glass-border);
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 20px var(--shadow-glow), 0 1px 3px var(--shadow-light);
-    }
-
-    .btn-primary:hover {
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(255, 255, 255, 0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px var(--shadow-medium), 0 1px 3px var(--shadow-light);
-    }
-
-    .btn-secondary {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      color: var(--mercury-600);
-      border: 1px solid var(--glass-border);
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.3s ease;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      box-shadow: 0 2px 12px var(--shadow-glow);
-    }
-
-    .card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-      box-shadow: 0 8px 32px var(--shadow-glow), 0 1px 3px var(--shadow-light);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .card:hover {
-      background: rgba(255, 255, 255, 0.9);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 12px 40px var(--shadow-medium), 0 1px 3px var(--shadow-light);
-      transform: translateY(-4px);
-    }
-
-    .input-field {
-      width: 100%;
-      background-color: var(--white-pure);
-      border: 1px solid var(--border-medium);
-      border-radius: 0.5rem;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      color: var(--text-primary);
-      transition: all 0.2s ease;
-      min-height: 44px;
-    }
-
-    .input-field:focus {
-      outline: none;
-      border-color: var(--focus-ring);
-      box-shadow: 0 0 0 3px rgba(163, 163, 163, 0.1);
-    }
-
-    .input-field::placeholder {
-      color: var(--text-tertiary);
-    }
-
-    /* Standard Interactive Targets */
-    button,
-    input,
-    select,
-    textarea {
-      min-height: 48px;
-    }
-
-    @media (min-width: 768px) {
-
-      button,
-      input,
-      select,
-      textarea {
-        min-height: auto;
+      body {
+        background-color: var(--background);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
       }
-    }
+      .animate-fadeIn {
+        animation: fadeIn 0.5s ease-in-out;
+      }
 
-    /* Scrollbar Styling */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94A3B8;
-    }
-
-    /* Prevent text selection glare */
-    ::selection {
-      background: rgba(10, 52, 66, 0.1);
-      color: var(--text-primary);
-    }
-  </style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {
@@ -463,12 +130,10 @@
   }
 }
 </script>
-  <link rel="stylesheet" href="/src/index.css">
+<link rel="stylesheet" href="/src/index.css">
 </head>
-
-<body class="bg-background text-text-secondary selection:bg-emerald-glow">
-  <div id="root"></div>
+  <body>
+    <div id="root"></div>
   <script type="module" src="/src/index.tsx"></script>
 </body>
-
 </html>

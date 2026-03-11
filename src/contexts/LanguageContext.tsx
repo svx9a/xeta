@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { translations, TranslationKeys } from '../translations';
 
-type Language = 'en' | 'th' | 'vi' | 'id' | 'ms' | 'fil' | 'km' | 'lo' | 'my';
+type Language = 'en' | 'th' | 'vi' | 'id' | 'ms';
 
 interface LanguageContextType {
     currentLang: Language;
@@ -16,39 +16,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     useEffect(() => {
         const savedLang = localStorage.getItem('language') as Language;
-        const validLangs: Language[] = ['en', 'th', 'vi', 'id', 'ms', 'fil', 'km', 'lo', 'my'];
+        const validLangs: Language[] = ['en', 'th', 'vi', 'id', 'ms'];
         if (savedLang && validLangs.includes(savedLang)) {
             setCurrentLang(savedLang);
         }
-        applyFontForLang(savedLang && validLangs.includes(savedLang) ? savedLang : 'en');
     }, []);
 
-    const applyFontForLang = (lang: Language) => {
+    const setLanguage = (lang: Language) => {
         setCurrentLang(lang);
         localStorage.setItem('language', lang);
-        const fontMap: Record<Language, { family: string; url?: string }> = {
-            en: { family: `'Space Grotesk','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap' },
-            th: { family: `'IBM Plex Sans Thai','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap' },
-            vi: { family: `'Inter','Noto Sans','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap' },
-            id: { family: `'Inter','system-ui',sans-serif` },
-            ms: { family: `'Inter','system-ui',sans-serif` },
-            fil: { family: `'Inter','system-ui',sans-serif` },
-            km: { family: `'Inter','Noto Sans Khmer','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;700&display=swap' },
-            lo: { family: `'Inter','Noto Sans Lao','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap' },
-            my: { family: `'Inter','Noto Sans Myanmar','system-ui',sans-serif`, url: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;700&display=swap' },
-        };
-        const cfg = fontMap[lang];
-        document.documentElement.style.setProperty('--font-sans', cfg.family);
-        if (cfg.url && !document.querySelector(`link[data-font="${lang}"]`)) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = cfg.url;
-            link.setAttribute('data-font', lang);
-            document.head.appendChild(link);
-        }
-    };
-    const setLanguage = (lang: Language) => {
-        applyFontForLang(lang);
     };
 
     const t = useCallback((key: TranslationKeys, options?: { [key: string]: string | number }): string => {

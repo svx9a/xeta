@@ -7,9 +7,24 @@
 import { BridgeManager, handleBridgeWebSocket } from './bridge';
 import { NeuralAI } from './ai';
 import { RoutingEngine, ProviderAccount } from './router';
-import { calculateTax } from '../src/services/taxService';
 import { getShippingQuotes } from '../src/services/shippingService';
-import { AseanCountry } from '../src/services/commerceConfig';
+
+// Inlined from deleted commerceConfig.ts + taxService.ts
+type AseanCountry = 'Brunei' | 'Cambodia' | 'Indonesia' | 'Laos' | 'Malaysia' | 'Myanmar' | 'Philippines' | 'Singapore' | 'Thailand' | 'Vietnam';
+
+const TAX_RATES: Record<AseanCountry, { type: 'VAT' | 'GST'; rate: number }> = {
+  Brunei: { type: 'GST', rate: 0 }, Cambodia: { type: 'VAT', rate: 0.10 },
+  Indonesia: { type: 'VAT', rate: 0.11 }, Laos: { type: 'VAT', rate: 0.10 },
+  Malaysia: { type: 'GST', rate: 0.06 }, Myanmar: { type: 'VAT', rate: 0.05 },
+  Philippines: { type: 'VAT', rate: 0.12 }, Singapore: { type: 'GST', rate: 0.09 },
+  Thailand: { type: 'VAT', rate: 0.07 }, Vietnam: { type: 'VAT', rate: 0.10 },
+};
+
+function calculateTax(country: AseanCountry, amount: number) {
+  const cfg = TAX_RATES[country];
+  const tax = +(amount * cfg.rate).toFixed(2);
+  return { country, type: cfg.type, rate: cfg.rate, taxableAmount: amount, taxAmount: tax, totalAmount: +(amount + tax).toFixed(2) };
+}
 
 export interface Env {
     BRIDGE_STORE: KVNamespace;

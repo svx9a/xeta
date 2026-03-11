@@ -1,15 +1,9 @@
-// ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-// ⛔ CRITICAL: DO NOT USE MONACO EDITOR HERE
-// ⛔ This is a PRODUCTION PAYMENT PAGE
-// ⛔ Monaco would break PCI compliance
-// ⛔ Security team will reject PR
-// ⛔ Users don't need code editing
-// ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
-import { CreditCard, QrCode, ShieldCheck, Zap, ArrowLeft, ArrowRight, CheckCircle, Download, Camera, Cpu, Globe, Lock } from 'lucide-react';
+import { CreditCard, QrCode, ShieldCheck, Download, Cpu, Globe, Lock, CheckCircle2, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import PromptPayQR from '../components/PromptPayQR';
+import PageHeader from '../components/PageHeader';
+import Card from '../components/Card';
 
 const CheckoutPage: React.FC = () => {
     const { t, currentLang } = useTranslation();
@@ -45,123 +39,126 @@ const CheckoutPage: React.FC = () => {
 
     if (step === 'success') {
         return (
-            <div className="fixed inset-0 bg-background z-[100] flex items-center justify-center p-6 overflow-hidden">
-                {/* Success Background */}
-                <div className="absolute inset-0 geom-pattern opacity-[0.03]" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] bg-emerald-glow opacity-20 rounded-full blur-[200px]" />
+            <div className="animate-fadeIn w-full space-y-8">
+                <PageHeader 
+                    title="Settlement Confirmed" 
+                    subtitle="Indexing Complete // Sovereign Asset Matrix" 
+                    icon={CheckCircle2} 
+                    status="COMPLETED"
+                />
 
-                <div className="w-full max-w-3xl animate-fadeIn relative z-10">
-                    <div className="bg-white rounded-3xl p-8 shadow-custom border border-border-light relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-glow to-transparent pointer-events-none" />
+                <Card padding="p-16" className="max-w-4xl mx-auto text-center relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-emerald-500/5 rounded-full -mr-32 -mt-32 blur-[150px] pointer-events-none" />
+                    
+                    <div className="relative z-10">
+                        <div className="w-24 h-24 bg-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-10 border border-emerald-500/20">
+                            <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+                        </div>
 
-                        <div className="flex flex-col items-center text-center">
-                            <div className="relative mb-12">
-                                <div className="absolute inset-0 bg-success rounded-full blur-3xl opacity-10 animate-pulse" />
-                                <div className="w-36 h-36 bg-sidebar-bg rounded-full flex items-center justify-center relative z-10 shadow-xl border border-success/30 animate-[pop_0.6s_cubic-bezier(0.34,1.56,0.64,1)]">
-                                    <CheckCircle className="text-success w-20 h-20 drop-shadow-[0_0_20px_rgba(10,52,66,0.2)]" />
-                                </div>
+                        <h2 className="text-5xl font-black text-slate-800 uppercase tracking-tighter italic mb-4">Transfer Indexed</h2>
+                        <p className="text-slate-500 mb-12 max-w-lg mx-auto uppercase tracking-widest text-[11px] font-black italic">
+                            The sovereign asset transfer has been committed to the regional edge nodes and indexed on the core liquidity ledger.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                            <div className="bg-slate-50/50 p-8 rounded-3xl border border-slate-100 text-left">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2 italic">Valuation</span>
+                                <span className="text-3xl font-black text-slate-800 italic tracking-tighter">{formatCurrency(amount)}</span>
                             </div>
-
-                            <h1 className="text-7xl font-black text-text-primary uppercase tracking-tighter italic mb-8 leading-none">Asset Secured</h1>
-                            <p className="text-2xl text-text-secondary font-medium leading-relaxed italic mb-14 max-w-xl">
-                                Your <span className="text-emerald-shine font-black underline decoration-emerald-shine/30 underline-offset-8 uppercase">Sovereign Asset Transfer</span> has been indexed on the core ledger.
-                            </p>
-
-                            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-8 mb-14">
-                                <div className="bg-sidebar-bg p-8 rounded-2xl border border-border-light text-left hover:bg-white transition-all shadow-sm">
-                                    <span className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] block mb-3 italic opacity-60">Valuation Index</span>
-                                    <span className="text-4xl font-black text-emerald-shine italic tracking-tighter tabular-nums">{formatCurrency(amount)}</span>
-                                </div>
-                                <div className="bg-sidebar-bg p-8 rounded-2xl border border-border-light text-left hover:bg-white transition-all shadow-sm">
-                                    <span className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] block mb-3 italic opacity-60">Indexing Hash</span>
-                                    <span className="text-xl font-mono font-bold text-text-primary uppercase tracking-wider">{orderId}</span>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row gap-8 w-full">
-                                <button className="flex-1 py-8 bg-emerald-deep text-slate-800 rounded-2xl font-black uppercase tracking-[0.4em] italic hover:bg-emerald-rich transition-all shadow-emerald flex items-center justify-center gap-4 group">
-                                    <Download className="w-6 h-6 group-hover:translate-y-1 transition-transform" />
-                                    Extract Ledger
-                                </button>
-                                <button
-                                    onClick={() => window.location.hash = '#/home'}
-                                    className="flex-1 py-8 bg-sidebar-bg text-text-primary border border-border-light rounded-2xl font-black uppercase tracking-[0.4em] italic hover:bg-white transition-all shadow-sm"
-                                >
-                                    Return to Command
-                                </button>
+                            <div className="bg-slate-50/50 p-8 rounded-3xl border border-slate-100 text-left">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2 italic">Node_Identity</span>
+                                <span className="text-xl font-mono font-bold text-slate-800 uppercase tracking-wider">{orderId}</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-16 text-center">
-                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.8em] italic opacity-40">End of Transmission // Node AGX-V9 Secure</p>
+                        <div className="flex flex-col sm:flex-row gap-6">
+                            <button className="flex-1 py-6 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.4em] italic hover:bg-slate-800 transition-all shadow-xl flex items-center justify-center gap-4">
+                                <Download className="w-5 h-5" />
+                                Extract Ledger
+                            </button>
+                            <button
+                                onClick={() => window.location.hash = '#/home'}
+                                className="flex-1 py-6 bg-white text-slate-600 border border-slate-200 rounded-2xl font-black uppercase tracking-[0.4em] italic hover:bg-slate-50 transition-all"
+                            >
+                                Root Sequence
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </Card>
             </div>
         );
     }
 
     if (step === 'processing') {
         return (
-            <div className="fixed inset-0 bg-background z-[100] flex flex-col items-center justify-center p-6 text-text-primary overflow-hidden">
-                <div className="absolute inset-0 geom-pattern opacity-[0.03]" />
-                <div className="relative mb-16">
-                    <div className="w-56 h-56 border-[16px] border-sidebar-bg border-t-emerald-shine rounded-full animate-spin shadow-glow" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Cpu className="text-emerald-shine w-20 h-20 animate-pulse" />
+            <div className="animate-fadeIn w-full space-y-8">
+                <PageHeader 
+                    title="Establishing Consensus" 
+                    subtitle="Syncing Regional Edge Nodes..." 
+                    icon={Cpu} 
+                    status="SYNCHRONIZING"
+                />
+
+                <Card padding="p-24" className="flex flex-col items-center justify-center text-center relative overflow-hidden">
+                    <div className="absolute inset-0 geom-pattern opacity-[0.02] pointer-events-none" />
+                    <div className="w-48 h-48 border-[12px] border-slate-100 border-t-blue-600 rounded-full animate-spin mb-12" />
+                    <div className="flex items-center gap-4 text-slate-400">
+                        <Globe className="w-5 h-5 animate-pulse text-blue-500" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.5em] italic">Committing Ledger State...</span>
                     </div>
-                </div>
-                <h2 className="text-6xl font-black uppercase tracking-tighter italic mb-8 animate-pulse text-center">Establishing Consensus</h2>
-                <div className="flex flex-col items-center gap-4">
-                    <div className="flex items-center gap-4 bg-sidebar-bg px-8 py-4 rounded-full border border-border-light shadow-sm">
-                        <Globe className="w-5 h-5 text-emerald-shine animate-spin" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.6em] text-text-secondary italic">Syncing Regional Edge Nodes...</span>
-                    </div>
-                </div>
+                </Card>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background animate-fadeIn text-text-primary">
-            <div className="max-w-7xl mx-auto py-24 px-8">
-                {/* Checkout Header Architecture */}
-                <div className="mb-24 flex flex-col xl:flex-row justify-between items-start xl:items-end gap-16">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-6">
-                            <div className="w-20 h-2.5 bg-emerald-deep rounded-full" />
-                            <span className="text-xs font-black uppercase tracking-[0.8em] text-text-secondary italic">Sovereign Gateway v4.2</span>
-                        </div>
-                        <h1 className="text-5xl sm:text-8xl lg:text-9xl font-black tracking-tighter text-text-primary uppercase italic leading-[0.8] drop-shadow-sm">
-                            ASSET <span className="text-emerald-deep block sm:inline">SETTLEMENT</span>
-                        </h1>
-                    </div>
+        <div className="animate-fadeIn w-full space-y-6 pb-8">
+            <PageHeader
+                title="Gateway Hub"
+                subtitle="Sovereign Asset Settlement Interface"
+                icon={Lock}
+                status="LIVE_GATEWAY"
+            />
 
-                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-custom border border-border-light relative overflow-hidden group min-w-full sm:min-w-[420px] hover:scale-[1.02] transition-all duration-700">
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-glow opacity-5 rounded-full blur-[120px] -mr-40 -mt-40 group-hover:scale-150 transition-all duration-1000" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.6em] text-text-secondary mb-6 block italic opacity-60">Final Valuation Index</span>
-                        <p className="text-5xl sm:text-7xl font-black italic tracking-tighter text-emerald-deep drop-shadow-sm tabular-nums">{formatCurrency(amount)}</p>
-                        <div className="mt-12 flex items-center justify-between border-t border-border-light pt-10">
-                            <div className="flex items-center gap-4">
-                                <Lock className="w-5 h-5 text-emerald-shine" />
-                                <span className="text-[11px] font-black uppercase tracking-widest text-text-secondary italic">Secure Vector Lock</span>
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                {/* Status Dashboard Component */}
+                <div className="xl:col-span-12">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-border-light flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-glow opacity-5 rounded-full blur-[80px] pointer-events-none" />
+                        
+                        <div className="flex items-center gap-6">
+                            <div className="w-12 h-12 bg-sidebar-bg rounded-xl flex items-center justify-center border border-border-light shadow-sm">
+                                <Cpu className="w-6 h-6 text-emerald-shine" />
                             </div>
-                            <span className="font-mono text-base font-bold text-slate-800 bg-emerald-deep px-8 py-3 rounded-2xl border border-emerald-shine shadow-inner">04:59</span>
+                            <div>
+                                <h3 className="text-lg font-black text-text-primary uppercase italic tracking-tighter">Valuation Index</h3>
+                                <p className="text-sm font-bold text-text-secondary italic opacity-60">XETA-CORE-SETTLEMENT-77341</p>
+                            </div>
+                        </div>
+
+                        <div className="text-center md:text-right">
+                            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-text-secondary mb-1 block italic opacity-60">Final Valuation</span>
+                            <p className="text-4xl font-black italic tracking-tighter text-emerald-deep tabular-nums">{formatCurrency(amount)}</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 bg-sidebar-bg px-6 py-3 rounded-xl border border-border-light">
+                            <Lock className="w-4 h-4 text-emerald-shine" />
+                            <span className="text-xs font-mono font-bold text-slate-800">04:59</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+                <div className="xl:col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                     {/* Method Architecture Selection */}
                     {/* Method Architecture Selection */}
-                    <div className="space-y-12">
+                    <div className="space-y-6">
                         {step === 'shipping' ? (
-                            <div className="space-y-12 animate-slideIn">
-                                <div className="flex items-center gap-6 mb-4">
-                                    <Globe className="text-emerald-deep w-8 h-8" />
-                                    <h3 className="text-3xl font-black text-text-primary uppercase tracking-tighter italic">{t('shippingInfo' as any)}</h3>
+                            <div className="space-y-6 animate-slideIn">
+                                <div className="flex items-center gap-4 mb-2">
+                                    <Globe className="text-emerald-deep w-6 h-6" />
+                                    <h3 className="text-xl font-black text-text-primary uppercase tracking-tighter italic">{t('shippingInfo' as any)}</h3>
                                 </div>
-                                <div className="space-y-10 bg-white border border-border-light p-10 rounded-3xl shadow-sm">
+                                <div className="space-y-6 bg-white border border-border-light p-6 rounded-2xl shadow-sm">
                                     <div className="space-y-6 group/field">
                                         <label className="block text-[10px] font-black text-text-secondary uppercase tracking-[0.6em] italic group-focus-within/field:text-emerald-shine transition-colors">{t('fullName' as any)}</label>
                                         <input
@@ -217,10 +214,10 @@ const CheckoutPage: React.FC = () => {
                                     <button
                                         onClick={() => setStep('selection')}
                                         disabled={!shippingData.name || !shippingData.address}
-                                        className="w-full py-8 bg-emerald-deep text-slate-800 rounded-2xl font-black uppercase tracking-[0.4em] italic text-xl hover:bg-emerald-rich transition-all shadow-emerald flex items-center justify-center gap-6 group disabled:opacity-50 disabled:grayscale"
+                                        className="w-full py-6 bg-emerald-deep text-slate-800 rounded-xl font-black uppercase tracking-[0.4em] italic text-lg hover:bg-emerald-rich transition-all shadow-emerald flex items-center justify-center gap-4 group disabled:opacity-50 disabled:grayscale"
                                     >
                                         {t('proceedToPayment' as any)}
-                                        <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                                     </button>
                                 </div>
                             </div>
@@ -302,18 +299,18 @@ const CheckoutPage: React.FC = () => {
                     </div>
 
                     {/* Logic Result Interface */}
-                    <div className="relative min-h-[400px] sm:min-h-[600px]">
+                    <div className="relative min-h-[400px]">
                         {step === 'shipping' ? (
-                            <div className="h-full bg-white border border-border-light p-10 rounded-3xl shadow-custom flex flex-col items-center justify-center text-center relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-glow opacity-5 rounded-full blur-[80px] -mr-32 -mt-32" />
-                                <div className="w-32 h-32 bg-sidebar-bg rounded-[2rem] flex items-center justify-center mb-10 shadow-sm border border-border-light group-hover:rotate-6 transition-transform">
-                                    <Globe className="w-14 h-14 text-emerald-shine" />
+                            <div className="h-full bg-white border border-border-light p-8 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-glow opacity-5 rounded-full blur-[60px] -mr-24 -mt-24" />
+                                <div className="w-24 h-24 bg-sidebar-bg rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-border-light group-hover:rotate-6 transition-transform">
+                                    <Globe className="w-10 h-10 text-emerald-shine" />
                                 </div>
-                                <h4 className="text-3xl font-black text-text-primary uppercase italic tracking-tighter mb-6">Inventory Allocation</h4>
-                                <p className="text-lg font-bold text-text-secondary italic opacity-60 max-w-sm mb-12">Specify the geospatial delivery node for asset mobilization. All shipments are tracked via AGX-Secure-Track.</p>
-                                <div className="w-full flex items-center justify-between p-6 bg-sidebar-bg rounded-2xl border border-border-light border-dashed">
-                                    <div className="flex items-center gap-4">
-                                        <ShieldCheck className="w-6 h-6 text-emerald-shine" />
+                                <h4 className="text-2xl font-black text-text-primary uppercase italic tracking-tighter mb-4">Inventory Allocation</h4>
+                                <p className="text-sm font-bold text-text-secondary italic opacity-60 max-w-sm mb-8">Specify the geospatial delivery node for asset mobilization. All shipments are tracked via AGX-Secure-Track.</p>
+                                <div className="w-full flex items-center justify-between p-4 bg-sidebar-bg rounded-xl border border-border-light border-dashed">
+                                    <div className="flex items-center gap-3">
+                                        <ShieldCheck className="w-5 h-5 text-emerald-shine" />
                                         <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">Transit Encryption Active</span>
                                     </div>
                                     <span className="text-[10px] font-black uppercase tracking-widest text-emerald-shine italic animate-pulse">Waiting for Data...</span>
@@ -435,13 +432,13 @@ const CheckoutPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="mt-32 flex flex-col items-center gap-12">
-                    <div className="flex items-center gap-16 opacity-20 hover:opacity-100 transition-all duration-1000 grayscale hover:grayscale-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-10" alt="Mastercard" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-7" alt="Visa" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png" className="h-8" alt="PromptPay" />
+                <div className="xl:col-span-12 mt-12 flex flex-col items-center gap-8">
+                    <div className="flex items-center gap-12 opacity-20 hover:opacity-100 transition-all duration-1000 grayscale hover:grayscale-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-8" alt="Mastercard" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-5" alt="Visa" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png" className="h-6" alt="PromptPay" />
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         <ShieldCheck className="w-4 h-4 text-text-secondary/40" />
                         <p className="text-[10px] font-black text-text-secondary uppercase tracking-[1em] italic opacity-20">Secured via AGX9 Protocol</p>
                     </div>

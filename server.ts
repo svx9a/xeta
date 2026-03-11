@@ -11,7 +11,7 @@ async function startServer() {
   const app = express();
   app.use(bodyParser.json());
   const server = http.createServer(app);
-  const PORT = Number(process.env.PORT) || 8080;
+  const PORT = Number(process.env.PORT) || 8081;
 
   // WebSocket Server
   const wss = new WebSocketServer({ server });

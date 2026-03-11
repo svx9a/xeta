@@ -3,15 +3,14 @@ import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { MOCK_USER, MOCK_ACTIVITY_LOGS } from '../constants';
 import { ActivityLog, ActivityLogStatus } from '../types';
-import { User, Activity, Shield, Clock, ShieldCheck, Zap } from 'lucide-react';
 
 const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }) => {
     const { t } = useTranslation();
-    const baseClasses = "px-5 py-2.5 text-[10px] font-black rounded-xl uppercase tracking-[0.25em] inline-block border shadow-sm transition-all hover:translate-y-[-2px]";
+    const baseClasses = "px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-widest inline-block border";
     const statusClasses: Record<ActivityLogStatus, string> = {
-        succeeded: "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20 shadow-[#10B981]/5",
-        pending: "bg-amber-500/10 text-amber-500 border-amber-500/20 animate-pulse shadow-amber-500/5",
-        failed: "bg-rose-500/10 text-rose-500 border-rose-500/20 shadow-rose-500/5",
+        succeeded: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800",
+        pending: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
+        failed: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800",
     };
     return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as any)}</span>;
 };
@@ -19,9 +18,9 @@ const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }
 const ProfileDetail: React.FC<{ labelKey: any; value: string }> = ({ labelKey, value }) => {
     const { t } = useTranslation();
     return (
-        <div className="group/detail">
-            <label className="block text-[10px] font-black text-blue-600/60 uppercase tracking-[0.4em] mb-3 group-hover/detail:text-blue-600 transition-colors leading-none">{t(labelKey)}</label>
-            <p className="text-xl font-black text-slate-800 tracking-tighter uppercase">{value}</p>
+        <div>
+            <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1">{t(labelKey)}</label>
+            <p className="text-text-primary font-bold tracking-tight">{value}</p>
         </div>
     );
 };
@@ -31,101 +30,67 @@ const AccountPage: React.FC = () => {
     const user = MOCK_USER;
 
     return (
-        <div className="animate-fadeIn max-w-full 2xl:max-w-[1600px] w-full space-y-16 pb-32 mx-auto px-6">
-            <div className="flex flex-col sm:flex-row justify-between items-end gap-10 pb-12 border-b border-[var(--border-subtle)]">
-                <div>
-                    <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-[var(--text-primary)] uppercase leading-none">
-                        Executive Profile
-                    </h1>
-                    <p className="text-[12px] font-black text-[var(--primary-azure)]/80 uppercase tracking-[0.5em] mt-6 border-l-4 border-[var(--primary-azure)]/20 pl-6 h-4">SOVEREIGN NODE OPERATOR // LEVEL 4</p>
-                </div>
-            </div>
+        <div className="space-y-7 animate-fadeIn max-w-5xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">{t('account')}</h1>
 
-            <Card padding="p-12" className="bg-white/60 border border-[var(--border-subtle)] rounded-[3rem] shadow-2xl backdrop-blur-3xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-[var(--primary-azure)]/5 rounded-full -mr-32 -mt-32 blur-[150px] group-hover:scale-110 transition-all duration-1000 pointer-events-none" />
-
-                <div className="flex flex-col lg:flex-row items-center gap-16 relative z-10">
-                    <div className="relative group/avatar">
-                        <div className="absolute inset-0 bg-[var(--primary-azure)]/20 rounded-full blur-3xl opacity-40 animate-pulse" />
-                        <div className="w-56 h-56 rounded-full bg-[var(--bg-secondary)] border-4 border-[var(--border-subtle)] text-[var(--text-primary)] flex items-center justify-center font-black text-8xl relative z-10 shadow-2xl group-hover/avatar:rotate-12 transition-all duration-700">
-                            {user.avatar}
-                        </div>
+            <Card className="overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-center gap-8">
+                    <div className="w-28 h-28 rounded-full satin-effect text-white flex items-center justify-center font-bold text-5xl flex-shrink-0 shadow-satin">
+                        {user.avatar}
                     </div>
-
-                    <div className="flex-grow text-center lg:text-left">
-                        <h2 className="text-6xl lg:text-7xl font-black text-[var(--text-primary)] uppercase tracking-tighter mb-8 leading-none">{user.name}</h2>
-                        <div className="flex items-center justify-center lg:justify-start gap-8 mb-16">
-                            <span className="text-[14px] font-black text-[var(--primary-azure)]/80 font-mono tracking-tight uppercase border-b-2 border-[var(--primary-azure)]/20 pb-1">
-                                {user.email}
-                            </span>
-                            <div className="w-2 h-2 rounded-full bg-[var(--primary-azure)]/20" />
-                            <span className="px-8 py-3 bg-[var(--primary-azure)]/10 text-[var(--primary-azure)] text-[11px] font-black uppercase tracking-[0.4em] rounded-2xl border border-[var(--primary-azure)]/20">
+                    <div className="flex-grow text-center sm:text-left">
+                        <h2 className="text-3xl font-extrabold text-text-primary tracking-tight">{user.name}</h2>
+                        <p className="text-text-secondary font-medium">{user.email}</p>
+                        <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
+                             <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">
                                 {t(user.role as any)}
-                            </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 border-l-4 border-[var(--primary-azure)]/10 pl-12">
-                            <ProfileDetail labelKey="role" value={t(user.role as any)} />
-                            <ProfileDetail labelKey="lastLogin" value={new Date(user.lastLogin).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
+                             </span>
                         </div>
                     </div>
-
-                    <button className="px-16 py-8 text-sm font-black uppercase tracking-[0.6em] text-white bg-[var(--primary-azure)] hover:bg-[var(--primary-azure)]/90 rounded-[2.5rem] shadow-2xl transition-all hover:translate-y-[-6px] active:translate-y-[2px] flex items-center gap-6 group/btn border-4 border-white">
-                        <Zap className="w-8 h-8 group-hover:rotate-12 transition-transform" />
-                        UPGRADE ACCESS
+                    <button className="px-8 py-3 text-xs font-bold uppercase tracking-widest text-white satin-effect rounded-full shadow-satin hover:scale-105 transition-all w-full sm:w-auto">
+                        {t('editProfile')}
                     </button>
+                </div>
+                <div className="border-t border-border-color/60 my-8"></div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <ProfileDetail labelKey="role" value={t(user.role as any)} />
+                    <ProfileDetail labelKey="lastLogin" value={new Date(user.lastLogin).toLocaleString()} />
                 </div>
             </Card>
 
-            <Card padding="p-0" className="bg-white/60 border border-[var(--border-subtle)] rounded-[3rem] shadow-2xl backdrop-blur-3xl relative overflow-hidden group">
-                <div className="p-12 border-b border-[var(--border-subtle)] flex items-center justify-between relative z-10">
-                    <div className="flex items-center gap-8">
-                        <div className="p-6 bg-[var(--primary-azure)]/10 rounded-3xl border border-[var(--primary-azure)]/20 shadow-xl group-hover:rotate-[8deg] transition-transform">
-                            <Activity className="w-12 h-12 text-[var(--primary-azure)]" />
-                        </div>
-                        <div>
-                            <h2 className="text-4xl font-black text-[var(--text-primary)] uppercase tracking-tighter leading-none">Access Log Matrix</h2>
-                            <p className="text-[11px] font-black text-[var(--primary-azure)]/40 mt-4 uppercase tracking-[0.6em] leading-none">SECURITY EVENT STREAM</p>
-                        </div>
-                    </div>
+            <Card padding="p-0" className="overflow-hidden">
+                <div className="px-8 py-5 border-b border-border-color/60 bg-sidebar-bg/30">
+                    <h2 className="text-sm font-bold text-text-primary uppercase tracking-widest">{t('liveActivity')}</h2>
                 </div>
-
-                <div className="overflow-x-auto relative z-10">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)]">
-                                <th className="px-12 py-8 text-[12px] font-black text-[var(--primary-azure)]/60 uppercase tracking-[0.6em]">{t('timestamp')}</th>
-                                <th className="px-12 py-8 text-[12px] font-black text-[var(--primary-azure)]/60 uppercase tracking-[0.6em]">{t('event')}</th>
-                                <th className="px-12 py-8 text-[12px] font-black text-[var(--primary-azure)]/60 uppercase tracking-[0.6em]">{t('description')}</th>
-                                <th className="px-12 py-8 text-[12px] font-black text-[var(--primary-azure)]/60 uppercase tracking-[0.6em] text-right pr-16">{t('status')}</th>
+                <div className="overflow-x-auto">
+                     <table className="w-full text-sm text-left">
+                        <thead className="text-[10px] text-text-secondary uppercase tracking-widest bg-background/50">
+                            <tr>
+                                <th scope="col" className="px-8 py-4">{t('timestamp')}</th>
+                                <th scope="col" className="px-8 py-4">{t('event')}</th>
+                                <th scope="col" className="px-8 py-4">{t('description')}</th>
+                                <th scope="col" className="px-8 py-4 text-right">{t('status')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[var(--border-subtle)]">
-                            {MOCK_ACTIVITY_LOGS.slice(0, 8).map((log) => (
-                                <tr key={log.id} className="hover:bg-[var(--bg-secondary)] transition-all duration-500 group/row cursor-default">
-                                    <td className="px-12 py-8 whitespace-nowrap">
-                                        <div className="flex items-center gap-8 group-hover/row:translate-x-3 transition-all duration-500">
-                                            <Clock className="w-6 h-6 text-[var(--primary-azure)]/20" />
-                                            <span className="text-2xl font-mono font-black text-[var(--text-primary)] tracking-tighter tabular-nums">{new Date(log.timestamp).toLocaleString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-12 py-8">
-                                        <span className="font-mono text-[10px] font-black bg-[var(--primary-azure)]/10 text-[var(--primary-azure)] px-6 py-3 rounded-xl border border-[var(--primary-azure)]/20 tracking-[0.2em] uppercase">
+                        <tbody className="divide-y divide-border-color/60">
+                            {MOCK_ACTIVITY_LOGS.slice(0, 5).map((log) => (
+                                <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+                                    <td className="px-8 py-5 whitespace-nowrap text-xs font-medium text-text-secondary">{new Date(log.timestamp).toLocaleString()}</td>
+                                    <td className="px-8 py-5">
+                                        <span className="font-mono text-[10px] font-bold bg-gray-100 dark:bg-gray-800 text-text-secondary px-2 py-1 rounded border border-border-color/60">
                                             {log.event}
                                         </span>
                                     </td>
-                                    <td className="px-12 py-8">
-                                        <p className="text-xl font-black text-[var(--text-primary)] tracking-tighter group-hover/row:translate-x-2 transition-transform">{log.description}</p>
-                                    </td>
-                                    <td className="px-12 py-8 text-right pr-16"><ActivityStatusBadge status={log.status} /></td>
+                                    <td className="px-8 py-5 text-sm font-bold text-text-primary tracking-tight">{log.description}</td>
+                                    <td className="px-8 py-5 text-right"><ActivityStatusBadge status={log.status} /></td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-                <div className="p-16 bg-[var(--bg-secondary)] border-t border-[var(--border-subtle)] text-center relative z-10 transition-all hover:bg-[var(--bg-secondary)] group/extract">
-                    <button className="text-[12px] font-black text-[var(--primary-azure)] uppercase tracking-[0.8em] hover:text-[var(--text-primary)] transition-all underline underline-offset-[20px] decoration-4 decoration-[var(--primary-azure)]/20 hover:decoration-[var(--primary-azure)] group-hover/extract:translate-y-[-4px]">
-                        Extract Full Activity Matrix
+                <div className="px-8 py-4 bg-sidebar-bg/30 border-t border-border-color/60 text-center">
+                    <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">
+                        View all activity
                     </button>
                 </div>
             </Card>

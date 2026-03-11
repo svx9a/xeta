@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Cell } from 'recharts';
 import { Truck, Zap, Globe, TrendingUp, DollarSign, Activity, ShieldCheck } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 
 const performanceData = [
     { name: 'Kerry', success: 98.4, speed: 1.2 },
@@ -25,49 +26,11 @@ const regionalTrends = [
 
 const ShippingAnalytics: React.FC = () => {
     return (
-        <div className="animate-fadeIn w-full space-y-16 pb-32 px-6">
-            {/* Header Node: Sovereign Architecture */}
-            <div className="relative overflow-hidden bg-white/90 backdrop-blur-xl rounded-[3rem] p-12 text-[var(--text-primary)] shadow-2xl border border-[var(--border-subtle)] group">
-                {/* Cyber Background Accents */}
-                <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-[var(--primary-azure)]/5 rounded-full -mr-32 -mt-32 blur-[150px] group-hover:scale-110 transition-all duration-1000" />
-                <div className="absolute inset-0 bg-scanline opacity-[0.02] pointer-events-none" />
-
-                <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-12">
-                    <div className="flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-10 mb-12">
-                            <div className="w-24 h-24 bg-[var(--bg-secondary)] backdrop-blur-xl rounded-[2.5rem] border border-[var(--border-subtle)] shadow-2xl flex items-center justify-center group-hover:rotate-6 transition-all duration-1000">
-                                <Truck className="w-12 h-12 text-[var(--primary-azure)]" />
-                            </div>
-                            <div>
-                                <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-[var(--text-primary)] uppercase leading-none mb-4">
-                                    Mobility <span className="text-[var(--primary-azure)] block sm:inline">Intelligence</span>
-                                </h1>
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-[1px] bg-[var(--border-subtle)]" />
-                                    <p className="text-[12px] font-black text-[var(--text-secondary)] uppercase tracking-[0.8em]">ASSET_ROUTING_NODE_v9</p>
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-2xl text-[var(--text-secondary)] max-w-4xl font-black leading-relaxed uppercase tracking-tight border-l-8 border-[var(--primary-azure)]/20 pl-10">
-                            Real-time <span className="text-[var(--text-primary)] font-black underline decoration-[var(--primary-azure)]/20 underline-offset-[16px] decoration-4 text-bold">Mobility Matrix</span> extraction and predictive logistics for high-velocity global supply nodes.
-                        </p>
-                    </div>
-
-                    <div className="flex items-center gap-10 bg-[var(--bg-secondary)] backdrop-blur-xl px-10 py-8 rounded-3xl border border-[var(--border-subtle)] text-[var(--text-primary)] shadow-2xl group/status">
-                        <div className="relative">
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 shadow-sm group-hover:scale-125 transition-transform" />
-                            <div className="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <span className="text-[16px] font-black uppercase tracking-[0.5em] leading-none">OPTIMAL</span>
-                            <span className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em]">INTEGRITY_STABLE</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div className="animate-fadeIn w-full space-y-6 pb-8">
+            <PageHeader title="Shipping Analytics" subtitle="Mobility Intelligence Node" icon={Truck} status="Optimal" />
+            
             {/* Metrics Cluster: Sovereign Nodes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                     { label: 'Avg Extraction', value: '฿ 42.50', icon: DollarSign, trend: '-8% ALPHA' },
                     { label: 'Clearing Velocity', value: '1.4 Days', icon: Zap, trend: '+12% FLOW' },
