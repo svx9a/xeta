@@ -31,7 +31,8 @@
     "sharp": "^0.34.5",
     "svgo": "^4.0.1",
     "tsx": "^4.21.0",
-    "ws": "^8.19.0"
+    "ws": "^8.19.0",
+    "@google/genai": "^0.23.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250224.0",
