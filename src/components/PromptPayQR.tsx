@@ -31,10 +31,9 @@ const PromptPayQR: React.FC<PromptPayQRProps> = ({ amount, phoneNumber = '081-23
         <div className="flex flex-col items-center p-4 sm:p-6 bg-white rounded-2xl border border-border-color shadow-sm w-full">
             <div className="mb-4 text-center">
                 <img 
-                    src="https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png" 
+                    src="/icons/logo-cube.png" 
                     alt="PromptPay" 
-                    className="h-8 mx-auto mb-2"
-                    referrerPolicy="no-referrer"
+                    className="h-8 mx-auto mb-2 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
                 />
                 <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('qrPayment')}</p>
             </div>
@@ -50,10 +49,9 @@ const PromptPayQR: React.FC<PromptPayQRProps> = ({ amount, phoneNumber = '081-23
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
                             <img 
-                                src="https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png" 
-                                alt="PP" 
-                                className="w-8"
-                                referrerPolicy="no-referrer"
+                                src="/icons/logo-cube.png" 
+                                alt="XETA" 
+                                className="w-8 opacity-80"
                             />
                         </div>
                     </div>

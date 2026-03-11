@@ -106,7 +106,7 @@ const ChatWidget: React.FC = () => {
           <div className="flex items-center justify-between px-5 py-4 border-b border-border-color/60 bg-primary/5">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <img src="/logo-cube.png" alt="XETA Assistant" className="w-11 h-11 object-contain rounded-2xl" />
+                <img src="/icons/logo-cube.png" alt="XETA Assistant" className="w-11 h-11 object-contain rounded-2xl" />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-card-bg rounded-full" />
               </div>
               <div>
@@ -194,7 +194,7 @@ const ChatWidget: React.FC = () => {
         className="relative w-20 h-20 rounded-full flex items-center justify-center transition-transform hover:scale-105"
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
-        <img src="/logo-cube.png" alt="Open chat" className="w-16 h-16 object-contain drop-shadow-2xl" />
+        <img src="/icons/logo-cube.png" alt="Open chat" className="w-16 h-16 object-contain drop-shadow-2xl" />
         {!isOpen && (
           <>
             <span className="absolute inset-2 rounded-full bg-primary/10 blur-xl" />

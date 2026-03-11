@@ -13,18 +13,20 @@
     "deploy:fast": "npm run build:turbo && wrangler pages deploy dist --project-name=xetapay",
     "preview": "vite preview",
     "icons:optimize": "tsx scripts/optimize-icons.ts",
+    "icons:optimize:public": "tsx scripts/optimize-public-icons.ts",
+    "icons:optimize:public:medium": "tsx scripts/optimize-public-icons.ts --effect=medium",
+    "icons:optimize:public:geometric": "tsx scripts/optimize-public-icons.ts --effect=geometric",
     "check-monaco": "node scripts/check-monaco-usage.js",
     "god-speed": "npm run dev:turbo"
   },
   "dependencies": {
-
     "@types/body-parser": "^1.19.6",
     "body-parser": "^2.2.2",
     "express": "^5.2.1",
-
     "lucide-react": "^0.577.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.13.1",
     "recharts": "^3.1.2",
     "sharp": "^0.34.5",
     "svgo": "^4.0.1",
