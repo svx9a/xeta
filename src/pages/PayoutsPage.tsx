@@ -52,9 +52,10 @@ const PayoutsPage: React.FC = () => {
 
     // Dynamic upcoming payout
     const pendingPayouts = payouts.filter(p => p.status === 'pending');
-    const nextPayout = pendingPayouts.length > 0 ? pendingPayouts[0] : {
+    const nextPayout: Pick<Payout, 'date' | 'amount' | 'status' | 'currency'> = pendingPayouts.length > 0 ? pendingPayouts[0] : {
         date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
         amount: 8430.50,
+        currency: 'THB',
         status: 'pending' as PayoutStatus
     };
 
@@ -80,6 +81,36 @@ const PayoutsPage: React.FC = () => {
                         <p className="text-2xl font-extrabold text-primary tracking-tight">{formatCurrency(nextPayout.amount, nextPayout.currency)}</p>
                     </div>
                 </div>
+            </Card>
+
+            <Card className="satin-effect">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div>
+                        <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-2">Available for Immediate Cashout</h2>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-4xl font-black text-white tracking-tighter">{formatCurrency(12450.75)}</span>
+                            <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">THB</span>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={async () => {
+                            try {
+                                const { requestCashout } = await import('../services/edgeClient');
+                                const res = await requestCashout(12450.75, 'MERCH-001');
+                                if (res) {
+                                    alert(`Cashout Successful! Settlement ID: ${res.cashout_id}`);
+                                    window.location.reload();
+                                }
+                            } catch (err) {
+                                alert("Failed to process immediate settlement.");
+                            }
+                        }}
+                        className="px-10 py-4 bg-white text-primary rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-xl"
+                    >
+                        ⚡ Sovereign Cashout
+                    </button>
+                </div>
+                <p className="mt-4 text-[10px] text-white/50 font-medium italic">"Real-time settlement bypasses 48-hour holds for verified VIP merchants."</p>
             </Card>
 
             <Card padding="p-0" className="overflow-hidden">

@@ -11,8 +11,12 @@ CREATE TABLE IF NOT EXISTS merchants (
     id TEXT PRIMARY KEY,
     tenant_id TEXT NOT NULL,
     name TEXT NOT NULL,
+    email TEXT,
     settlement_bank TEXT,
     status TEXT DEFAULT 'active',
+    google_id TEXT,
+    apple_id TEXT,
+    auth_provider TEXT DEFAULT 'email',
     FOREIGN KEY (tenant_id) REFERENCES tenants(id)
 );
 -- 3. Providers (Infrastructure Layer)

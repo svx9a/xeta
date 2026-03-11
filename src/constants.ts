@@ -1,6 +1,14 @@
 import { Payment, ActivityLog, Payout, User } from './types';
 
-export const API_BASE_URL = "https://xeta-pay-dashboard.sv9.workers.dev";
+export const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? "http://localhost:8787" 
+    : "https://xeta-pay-dashboard.sv9.workers.dev";
+
+export const AUTH_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? "http://localhost:8787" 
+    : "https://dragon-dance-transformers.sv9.workers.dev";
+
+export const AI_AGENT_URL = "https://anzu-flood-azure.sv9.workers.dev";
 export const NAV_LINKS = [
     { id: 'home', tKey: 'home', icon: 'HomeIcon' },
     { id: 'payments', tKey: 'payments', icon: 'CreditCardIcon' },

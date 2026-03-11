@@ -70,6 +70,47 @@ export async function fetchSettlements(): Promise<Payout[]> {
 export async function fetchRoutingPreview(): Promise<
   { provider: string; fee_pct: number; fee_fixed: number; success_rate: number; score: number }[]
 > {
-  const data = await getJson<{ data: unknown[] }>("/api/routing/preview");
+  const data = await getJson<{
+    data: { provider: string; fee_pct: number; fee_fixed: number; success_rate: number; score: number }[];
+  }>("/api/routing/preview");
   return data?.data ?? [];
+}
+
+export interface QuotationRequest {
+    merchant_id: string;
+    customer_email: string;
+    total_due: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    items?: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata?: any;
+    turnstile_token?: string;
+}
+
+export async function generateQuotation(request: QuotationRequest): Promise<{ payment_link: string; id: string } | null> {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/quotations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(request)
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch {
+        return null;
+    }
+}
+
+export async function requestCashout(amount: number, merchantId: string): Promise<{ status: string; cashout_id: string } | null> {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/settlements/cashout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount, merchant_id: merchantId })
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch {
+        return null;
+    }
 }

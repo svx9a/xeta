@@ -14,4 +14,3 @@ binding = "AI"
 [[kv_namespaces]]
 binding = "BRIDGE_STORE"
 id = "9465f88bd89443ea981b3e6e30a76397"
-pages_build_output_dir = "dist"

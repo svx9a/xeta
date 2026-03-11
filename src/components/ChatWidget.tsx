@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { API_BASE_URL } from '../constants';
+import { API_BASE_URL, AI_AGENT_URL } from '../constants';
 import { useTranslation } from '../contexts/LanguageContext';
 import { XIcon, ZapIcon } from './icons';
 
@@ -77,7 +77,7 @@ const ChatWidget: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/agent`, {
+      const response = await fetch(`${AI_AGENT_URL}/api/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

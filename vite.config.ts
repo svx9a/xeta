@@ -28,14 +28,12 @@ export default defineConfig(({ mode }) => {
       }
     },
     build: {
-      // Enable build caching for faster rebuilds
-      watch: mode === 'development' ? {} : null,
       // Optimize chunk splitting
       rollupOptions: {
         output: {
-          // Split vendor chunks for better caching
+          // Only split ui vendor — react/react-dom must stay in the main chunk
+          // to avoid empty chunk issues with Vite's module resolution
           manualChunks: {
-            'react-vendor': ['react', 'react-dom'],
             'ui-vendor': ['lucide-react', 'recharts'],
           },
         },

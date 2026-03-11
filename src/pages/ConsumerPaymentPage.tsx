@@ -19,40 +19,45 @@ const ConsumerPaymentPage: React.FC = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        // Run immediately to fetch data for this link
         const fetchPaymentDetails = async () => {
             try {
-                // Determine API base url (for local vs prod) 
                 const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:8081' : window.location.origin;
+                const linkId = window.location.pathname.replace('/pay/', '');
+                const response = await fetch(`${baseUrl}/api/payment-links/${linkId}`);
                 
-                const response = await fetch(`${baseUrl}/api/payment-links${window.location.pathname.replace('/pay', '')}`);
+                if (!response.ok) throw new Error('Payment link not found or expired.');
                 
-                if (!response.ok) {
-                    throw new Error('Payment link not found or expired.');
-                }
-                
-                const data = await response.json();
+                const data = (await response.json()) as PaymentDetails;
                 setDetails(data);
-            } catch (err: any) {
-                setError(err.message);
+
+                // Start polling if pending
+                if (data.status === 'PENDING') {
+                    const pollInterval = setInterval(async () => {
+                        try {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            const token = (window as any).turnstile?.getResponse();
+                            const pollRes = await fetch(`${baseUrl}/api/payment-links/${linkId}/status?token=${token || ''}`);
+                            if (pollRes.ok) {
+                                const { status } = await pollRes.json() as { status: string };
+                                if (status === 'PAID') {
+                                    setDetails(prev => prev ? { ...prev, status: 'PAID' } : null);
+                                    clearInterval(pollInterval);
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Polling error", e);
+                        }
+                    }, 3000);
+                    return () => clearInterval(pollInterval);
+                }
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'An unknown error occurred');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchPaymentDetails();
-        
-        // Simulating websocket/polling for payment success
-        const simInterval = setInterval(() => {
-            setDetails(prev => {
-                if (prev && prev.status === 'PENDING' && Math.random() > 0.95) {
-                    return { ...prev, status: 'PAID' };
-                }
-                return prev;
-            });
-        }, 5000);
-
-        return () => clearInterval(simInterval);
     }, []);
 
     const formatCurrency = (amount: number) => {
@@ -122,6 +127,10 @@ const ConsumerPaymentPage: React.FC = () => {
                                 <PromptPayQR amount={details.amount_thb} orderId={`Order: ${details.id}`} />
                             </div>
                             
+                            <div className="flex justify-center mt-6">
+                                <div className="cf-turnstile" data-sitekey="0x4AAAAAACpKX1PxoaSTx8Kv"></div>
+                            </div>
+
                             <div className="mt-8 pt-6 border-t border-dashed border-border-color/60 text-xs text-text-secondary">
                                 Link expires on {new Date(details.expires_at).toLocaleDateString()}
                             </div>

@@ -28,7 +28,6 @@ const QuotationPage: React.FC = () => {
     const [isGenerated, setIsGenerated] = useState(false);
     const [generatedLink, setGeneratedLink] = useState('');
     const [isCopied, setIsCopied] = useState(false);
-    const [activeTab, setActiveTab] = useState<'details' | 'preview'>('details');
 
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const tax = subtotal * 0.07;
@@ -67,7 +66,7 @@ const QuotationPage: React.FC = () => {
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="text-3xl font-extrabold tracking-tight text-text-primary capitalize">
-                        {t('paymentLink' as any)} / {currentLang === 'th' ? 'ใบเสนอราคา' : 'Quotation'}
+                        {t('paymentLink')} / {currentLang === 'th' ? 'ใบเสนอราคา' : 'Quotation'}
                     </h1>
                     <p className="text-text-secondary text-sm mt-1">{currentLang === 'th' ? 'สร้างลิงก์รับชำระเงินและใบเสนอราคาระดับองค์กร' : 'Create professional payment links and quotations.'}</p>
                 </div>
@@ -89,8 +88,9 @@ const QuotationPage: React.FC = () => {
                             <h2 className="text-sm font-bold uppercase tracking-widest text-text-primary mb-6">{currentLang === 'th' ? 'ข้อมูลลูกค้า' : 'Customer Information'}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('customer')}</label>
+                                    <label htmlFor="customer-name" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('customer')}</label>
                                     <input 
+                                        id="customer-name"
                                         type="text" 
                                         value={customerName}
                                         onChange={(e) => setCustomerName(e.target.value)}
@@ -99,8 +99,9 @@ const QuotationPage: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('email')}</label>
+                                    <label htmlFor="customer-email" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('email')}</label>
                                     <input 
+                                        id="customer-email"
                                         type="email" 
                                         value={customerEmail}
                                         onChange={(e) => setCustomerEmail(e.target.value)}
@@ -111,8 +112,9 @@ const QuotationPage: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Address</label>
+                                    <label htmlFor="customer-address" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Address</label>
                                     <input 
+                                        id="customer-address"
                                         type="text" 
                                         value={customerAddress}
                                         onChange={(e) => setCustomerAddress(e.target.value)}
@@ -121,8 +123,9 @@ const QuotationPage: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Tax ID</label>
+                                    <label htmlFor="customer-tax-id" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Tax ID</label>
                                     <input 
+                                        id="customer-tax-id"
                                         type="text" 
                                         value={customerTaxId}
                                         onChange={(e) => setCustomerTaxId(e.target.value)}
@@ -133,8 +136,9 @@ const QuotationPage: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Issue Date</label>
+                                    <label htmlFor="issue-date" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Issue Date</label>
                                     <input 
+                                        id="issue-date"
                                         type="date" 
                                         value={issueDate}
                                         onChange={(e) => setIssueDate(e.target.value)}
@@ -142,8 +146,9 @@ const QuotationPage: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Due Date</label>
+                                    <label htmlFor="due-date" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Due Date</label>
                                     <input 
+                                        id="due-date"
                                         type="date" 
                                         value={dueDate}
                                         onChange={(e) => setDueDate(e.target.value)}
@@ -159,8 +164,9 @@ const QuotationPage: React.FC = () => {
                                 {items.map((item, index) => (
                                     <div key={item.id} className="flex gap-4 items-end animate-fadeIn">
                                         <div className="flex-1">
-                                            {index === 0 && <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('description')}</label>}
+                                            {index === 0 && <label htmlFor={`item-desc-${item.id}`} className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('description')}</label>}
                                             <input 
+                                                id={`item-desc-${item.id}`}
                                                 type="text" 
                                                 value={item.description}
                                                 onChange={(e) => updateItem(item.id, 'description', e.target.value)}
@@ -168,8 +174,9 @@ const QuotationPage: React.FC = () => {
                                             />
                                         </div>
                                         <div className="w-20">
-                                            {index === 0 && <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Qty</label>}
+                                            {index === 0 && <label htmlFor={`item-qty-${item.id}`} className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Qty</label>}
                                             <input 
+                                                id={`item-qty-${item.id}`}
                                                 type="number" 
                                                 value={item.quantity}
                                                 onChange={(e) => updateItem(item.id, 'quantity', parseInt(e.target.value) || 0)}
@@ -177,8 +184,9 @@ const QuotationPage: React.FC = () => {
                                             />
                                         </div>
                                         <div className="w-32">
-                                            {index === 0 && <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Price (THB)</label>}
+                                            {index === 0 && <label htmlFor={`item-price-${item.id}`} className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Price (THB)</label>}
                                             <input 
+                                                id={`item-price-${item.id}`}
                                                 type="number" 
                                                 value={item.price}
                                                 onChange={(e) => updateItem(item.id, 'price', parseFloat(e.target.value) || 0)}
@@ -205,8 +213,9 @@ const QuotationPage: React.FC = () => {
                         <Card>
                             <h2 className="text-sm font-bold uppercase tracking-widest text-text-primary mb-6">Terms & Notes</h2>
                             <div>
-                                <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Client Notes</label>
+                                <label htmlFor="client-notes" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Client Notes</label>
                                 <textarea 
+                                    id="client-notes"
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
                                     placeholder="Add any additional terms, payment conditions, or notes here..."
@@ -244,15 +253,41 @@ const QuotationPage: React.FC = () => {
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Total Due</span>
                                     <span className="text-2xl font-black text-primary tracking-tight">{formatCurrency(total)}</span>
                                 </div>
+
+                                <div className="flex justify-center">
+                                    <div className="cf-turnstile mt-4" data-sitekey="0x4AAAAAACpKX1PxoaSTx8Kv"></div>
+                                </div>
+
                                 <button 
-                                    onClick={() => {
-                                        setGeneratedLink(`${window.location.origin}/pay/${Math.random().toString(36).substr(2, 6).toUpperCase()}`);
-                                        setIsGenerated(true);
+                                    onClick={async () => {
+                                        try {
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            const token = (window as any).turnstile?.getResponse();
+                                            const { generateQuotation } = await import('../services/edgeClient');
+                                            const result = await generateQuotation({
+                                                merchant_id: 'MERCH-001', 
+                                                customer_email: customerEmail,
+                                                total_due: total,
+                                                items: items,
+                                                turnstile_token: token || 'simulated_token',
+                                                metadata: {
+                                                    notes,
+                                                    customerName,
+                                                    customerAddress
+                                                }
+                                            });
+                                            if (result) {
+                                                setGeneratedLink(result.payment_link);
+                                                setIsGenerated(true);
+                                            }
+                                        } catch (err) {
+                                            console.error("Failed to generate quotation", err);
+                                        }
                                     }}
                                     disabled={!customerName || total <= 0}
                                     className="w-full satin-effect text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px] mt-4 shadow-satin hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
                                 >
-                                    {t('generateLink' as any)}
+                                    {t('generateLink')}
                                 </button>
                             </div>
                         </Card>
@@ -364,9 +399,10 @@ const QuotationPage: React.FC = () => {
                                 </div>
 
                                 <div className="relative">
-                                    <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Direct Payment Link</label>
+                                    <label htmlFor="payment-link-input" className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Direct Payment Link</label>
                                     <div className="flex gap-2">
                                         <input 
+                                            id="payment-link-input"
                                             readOnly
                                             value={generatedLink}
                                             className="flex-1 min-w-0 bg-sidebar-bg/20 border border-border-color/60 rounded-xl px-3 sm:px-4 py-3 text-[9px] sm:text-[10px] font-mono focus:outline-none"
