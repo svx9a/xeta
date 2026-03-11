@@ -7,6 +7,8 @@ import RefundModal from '../components/RefundModal';
 import { useTranslation } from '../contexts/LanguageContext';
 import { usePayments } from '../contexts/PaymentsContext';
 import PromptPayQR from '../components/PromptPayQR';
+import { TranslationKeys } from '../translations';
+import DoubleVerifyPaymentModal from '../components/DoubleVerifyPaymentModal';
 
 const PaymentDetailRow: React.FC<{ label: string; value: string | React.ReactNode }> = ({ label, value }) => (
     <div className="flex justify-between py-4 border-b border-border-color/60 last:border-b-0">
@@ -20,6 +22,7 @@ const PaymentsPage: React.FC = () => {
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
+    const [isDoubleVerifyOpen, setIsDoubleVerifyOpen] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const { t, currentLang } = useTranslation();
 
@@ -75,6 +78,17 @@ const PaymentsPage: React.FC = () => {
         }, 1500));
     };
 
+    const handleCaptureStart = (payment: Payment) => {
+        setSelectedPayment(payment);
+        // Requirement: Show verification for high risk
+        if (payment.risk === 'High' || payment.amount > 50000) {
+            setIsDetailModalOpen(false);
+            setIsDoubleVerifyOpen(true);
+        } else {
+            handleCapture(payment);
+        }
+    };
+
     const handleCapture = async (payment: Payment) => {
         await simulateApiCall();
         handleUpdatePayment(payment.id, {
@@ -84,6 +98,7 @@ const PaymentsPage: React.FC = () => {
             amountRefundable: payment.amount,
         });
         closeDetailModal();
+        setIsDoubleVerifyOpen(false);
     };
 
     const handleVoid = async (payment: Payment) => {
@@ -121,8 +136,8 @@ const PaymentsPage: React.FC = () => {
             <div className="space-y-1">
                 <PaymentDetailRow label={t('orderId')} value={selectedPayment.orderId} />
                 <PaymentDetailRow label={t('totalAmount')} value={formatCurrency(selectedPayment.amount, selectedPayment.currency)} />
-                <PaymentDetailRow label={t('status')} value={<span className="capitalize">{t(selectedPayment.status as any)}</span>} />
-                <PaymentDetailRow label={t('paymentMethod')} value={<span className="uppercase tracking-widest text-[10px] font-bold">{t(selectedPayment.paymentMethod as any)}</span>} />
+                <PaymentDetailRow label={t('status')} value={<span className="capitalize">{t(selectedPayment.status as TranslationKeys)}</span>} />
+                <PaymentDetailRow label={t('paymentMethod')} value={<span className="uppercase tracking-widest text-[10px] font-bold">{t(selectedPayment.paymentMethod as TranslationKeys)}</span>} />
                 <PaymentDetailRow label={t('capturedAmount')} value={formatCurrency(selectedPayment.capturedAmount, selectedPayment.currency)} />
                 <PaymentDetailRow label={t('refundedAmount')} value={formatCurrency(selectedPayment.refundedAmount, selectedPayment.currency)} />
                 <PaymentDetailRow label={t('date')} value={formatDate(selectedPayment.date)} />
@@ -176,7 +191,7 @@ const PaymentsPage: React.FC = () => {
                 {isProcessing && <span className="text-[10px] font-bold uppercase tracking-widest animate-pulse text-text-secondary">{t('processing')}</span>}
                 {canVoid && <button onClick={() => handleVoid(selectedPayment)} disabled={isProcessing} className={secondaryButton}>{t('void')}</button>}
                 {canRefund && <button onClick={openRefundModal} disabled={isProcessing} className={primaryButton}>{t('refund')}</button>}
-                {canCapture && <button onClick={() => handleCapture(selectedPayment)} disabled={isProcessing} className={primaryButton}>{t('capture')} {formatCurrency(selectedPayment.amountCapturable, selectedPayment.currency)}</button>}
+                {canCapture && <button onClick={() => handleCaptureStart(selectedPayment)} disabled={isProcessing} className={primaryButton}>{t('capture')} {formatCurrency(selectedPayment.amountCapturable, selectedPayment.currency)}</button>}
             </div>
         );
     };
@@ -203,6 +218,20 @@ const PaymentsPage: React.FC = () => {
                 payment={selectedPayment}
                 onRefundSubmit={handleRefundSubmit}
             />
+
+            {selectedPayment && (
+                <DoubleVerifyPaymentModal 
+                    isOpen={isDoubleVerifyOpen}
+                    onClose={() => setIsDoubleVerifyOpen(false)}
+                    onConfirm={() => handleCapture(selectedPayment)}
+                    transactionDetails={{
+                        amount: selectedPayment.amount,
+                        recipient: selectedPayment.customer.name,
+                        riskLevel: selectedPayment.risk === 'High' ? 'high' : 'medium',
+                        transactionId: selectedPayment.id
+                    }}
+                />
+            )}
         </div>
     );
 };

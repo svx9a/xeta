@@ -1,9 +1,12 @@
 import { Payment, ActivityLog, Payout, User } from './types';
 
+export const API_BASE_URL = "https://xeta-pay-dashboard.sv9.workers.dev";
 export const NAV_LINKS = [
     { id: 'home', tKey: 'home', icon: 'HomeIcon' },
     { id: 'payments', tKey: 'payments', icon: 'CreditCardIcon' },
+    { id: 'quotation', tKey: 'paymentLink', icon: 'LinkIcon' },
     { id: 'payouts', tKey: 'payouts', icon: 'PayoutsIcon' },
+    { id: 'compliance', tKey: 'compliance', icon: 'ShieldCheckIcon' },
     { id: 'plugins', tKey: 'plugins', icon: 'PluginIcon' },
     { id: 'developer', tKey: 'developer', icon: 'CodeIcon' },
     { id: 'reports', tKey: 'reports', icon: 'ReportsIcon' },

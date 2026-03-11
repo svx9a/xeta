@@ -4,8 +4,8 @@ compatibility_date = "2024-03-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "xeta-pay-db"
-database_id = "3863efc8-a787-46e3-87b9-4555264e18d6"
+database_name = "xetapay-db"
+database_id = "95f7261a-5f1e-4e49-b35c-24f4962bb29d"
 migrations_dir = "migrations"
 
 [ai]
@@ -14,3 +14,4 @@ binding = "AI"
 [[kv_namespaces]]
 binding = "BRIDGE_STORE"
 id = "9465f88bd89443ea981b3e6e30a76397"
+pages_build_output_dir = "dist"

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from '../components/Card';
 import Switch from '../components/Switch';
-import { useTranslation } from '../contexts/LanguageContext';
+import { Language, useTranslation } from '../contexts/LanguageContext';
 import Modal from '../components/Modal';
 import { CheckCircleIcon, QrCodeIcon } from '../components/icons';
 
@@ -67,7 +67,7 @@ const SettingsPage: React.FC = () => {
                         <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t('language')}</label>
                         <select 
                             value={currentLang} 
-                            onChange={(e) => setLanguage(e.target.value as any)}
+                            onChange={(e) => setLanguage(e.target.value as Language)}
                             className="w-full bg-white dark:bg-background border border-border-color/60 rounded-xl p-4 text-text-primary font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none appearance-none cursor-pointer"
                         >
                             {languages.map(lang => (

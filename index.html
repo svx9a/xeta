@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -16,6 +16,7 @@
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
             },
             colors: {
               primary: 'var(--primary)',
@@ -34,50 +35,55 @@
             },
             boxShadow: {
               'custom': 'var(--shadow)',
-              'satin': '0 4px 20px rgba(34, 139, 34, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
+              'satin': '0 4px 20px rgba(27, 67, 50, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1)',
             },
             backgroundImage: {
-              'satin-gradient': 'linear-gradient(135deg, #228B22 0%, #2E8B57 50%, #1B5E20 100%)',
-              'satin-sheen': 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%)',
+              'satin-gradient': 'linear-gradient(135deg, #1b4332 0%, #081c15 100%)',
+              'satin-sheen': 'linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(212,175,55,0) 50%, rgba(212,175,55,0.05) 100%)',
             }
           }
         }
       }
     </script>
     <style>
-      :root {
-            --primary: #228B22; /* Forest Green */
-            --primary-light: #2E8B57; /* Sea Green */
-            --accent: #1B5E20; /* Darker Green */
-            --accent-light: #F1F8F1; /* Very light green background */
-            --background: #FFFFFF; /* Clean White */
-            --sidebar-bg: #F8FAF8; /* Subtle off-white */
+        :root {
+            --primary: #2D6A4F; /* Forest Green */
+            --primary-light: #40916C;
+            --accent: #D4AF37; /* Ancient Gold */
+            --accent-light: #fdf6e3;
+            --background: #fdfaf3; /* Light Parchment by default */
+            --sidebar-bg: #f5f1e6;
             --card-bg: #FFFFFF;
-            --text-primary: #1A241A; /* Dark Green-Black */
-            --text-secondary: #5C6B5C; /* Muted Green-Gray */
-            --border-color: #E2E8E2;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            --text-primary: #1A241A;
+            --text-secondary: #5C6B5C;
+            --border-color: #e6dfcf;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --neon-glow: rgba(212, 175, 55, 0.15);
+            --neon-core: rgba(255, 255, 255, 0.4);
         }
         
         .dark {
-            --primary: #2E8B57;
-            --primary-light: #3CB371;
-            --accent: #8FBC8F;
-            --accent-light: #1A2E1A;
-            --background: #0D140D;
-            --sidebar-bg: #141F14;
-            --card-bg: #141F14;
-            --text-primary: #E8F5E8;
-            --text-secondary: #A0B0A0;
-            --border-color: #243324;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --primary: #52B788; /* Vibrant Emerald in dark */
+            --primary-light: #74C69D;
+            --accent: #D4AF37;
+            --accent-light: #081c15;
+            --background: #020804; /* Deep Obsidian Green */
+            --sidebar-bg: #040c06;
+            --card-bg: #061408;
+            --text-primary: #e0e7e1;
+            --text-secondary: #8da391;
+            --border-color: #1a2a1d;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --neon-glow: rgba(82, 183, 136, 0.25);
+            --neon-core: rgba(255, 255, 255, 0.15);
         }
 
       .satin-effect {
-        background: linear-gradient(135deg, #228B22 0%, #2E8B57 50%, #1B5E20 100%);
+        background: linear-gradient(135deg, #1b4332 0%, #081c15 100%);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(34, 139, 34, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       }
 
       .satin-effect::after {
@@ -89,11 +95,11 @@
         height: 200%;
         background: linear-gradient(
           to bottom right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0) 40%,
-          rgba(255, 255, 255, 0.15) 50%,
-          rgba(255, 255, 255, 0) 60%,
-          rgba(255, 255, 255, 0) 100%
+          rgba(212, 255, 212, 0) 0%,
+          rgba(212, 255, 212, 0) 40%,
+          rgba(212, 175, 55, 0.05) 50%,
+          rgba(212, 255, 212, 0) 60%,
+          rgba(212, 255, 212, 0) 100%
         );
         transform: rotate(-45deg);
         pointer-events: none;
@@ -104,6 +110,11 @@
         color: var(--text-primary);
         font-family: 'Inter', sans-serif;
       }
+      
+      h1, h2, h3, .sovereign-font {
+        font-family: 'Playfair Display', serif;
+      }
+
       .animate-fadeIn {
         animation: fadeIn 0.5s ease-in-out;
       }
@@ -117,6 +128,27 @@
           opacity: 1;
           transform: translateY(0);
         }
+      }
+
+      /* Refined Backlight Shadow: Icons stay sharp, glow stays behind */
+      .neon-aura {
+        filter: drop-shadow(0 0 1px rgba(0,0,0,0.1)) drop-shadow(0 0 8px var(--neon-core)) drop-shadow(0 0 12px var(--neon-glow));
+      }
+
+      /* Passive Aura Interaction */
+      .icon-active-aura {
+        transition: filter 0.3s ease, transform 0.2s ease;
+      }
+
+      .icon-active-aura:active {
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)) !important;
+        transform: scale(0.96);
+      }
+
+      /* Utility to prevent neon on text */
+      .no-neon {
+        text-shadow: none !important;
+        filter: none !important;
       }
     </style>
   <script type="importmap">

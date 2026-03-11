@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { MOCK_PAYOUTS } from '../constants';
+import { fetchSettlements } from '../services/edgeClient';
 import { Payout, PayoutStatus } from '../types';
+import { TranslationKeys } from '../translations';
 
 const PayoutStatusBadge: React.FC<{ status: PayoutStatus }> = ({ status }) => {
     const { t } = useTranslation();
@@ -13,15 +15,44 @@ const PayoutStatusBadge: React.FC<{ status: PayoutStatus }> = ({ status }) => {
         pending: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
         failed: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800",
     };
-    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as any)}</span>;
+    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as TranslationKeys)}</span>;
 };
 
 const PayoutsPage: React.FC = () => {
     const { t } = useTranslation();
-    const formatCurrency = (value: number) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(value);
+    const [payouts, setPayouts] = useState<Payout[]>(MOCK_PAYOUTS);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Mock data for upcoming payout
-    const nextPayout = {
+    useEffect(() => {
+        let mounted = true;
+        async function fetchPayouts() {
+            try {
+                setIsLoading(true);
+                const settlementData = await fetchSettlements();
+                if (mounted && settlementData.length > 0) {
+                    setPayouts(settlementData);
+                    setError(null);
+                }
+            } catch {
+                if (mounted) {
+                    setError('Unable to load live payout history. Showing saved data.');
+                }
+            } finally {
+                if (mounted) {
+                    setIsLoading(false);
+                }
+            }
+        }
+        fetchPayouts();
+        return () => { mounted = false; };
+    }, []);
+
+    const formatCurrency = (value: number, currency = 'THB') => new Intl.NumberFormat('th-TH', { style: 'currency', currency }).format(value);
+
+    // Dynamic upcoming payout
+    const pendingPayouts = payouts.filter(p => p.status === 'pending');
+    const nextPayout = pendingPayouts.length > 0 ? pendingPayouts[0] : {
         date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
         amount: 8430.50,
         status: 'pending' as PayoutStatus
@@ -46,7 +77,7 @@ const PayoutsPage: React.FC = () => {
                     </div>
                     <div>
                         <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest block mb-1">{t('totalAmount')}</label>
-                        <p className="text-2xl font-extrabold text-primary tracking-tight">{formatCurrency(nextPayout.amount)}</p>
+                        <p className="text-2xl font-extrabold text-primary tracking-tight">{formatCurrency(nextPayout.amount, nextPayout.currency)}</p>
                     </div>
                 </div>
             </Card>
@@ -56,28 +87,39 @@ const PayoutsPage: React.FC = () => {
                     <h2 className="text-sm font-bold text-text-primary uppercase tracking-widest">{t('payoutHistory')}</h2>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-[10px] text-text-secondary uppercase tracking-widest bg-background/50">
-                            <tr>
-                                <th scope="col" className="px-8 py-4">{t('date')}</th>
-                                <th scope="col" className="px-8 py-4">{t('totalAmount')}</th>
-                                <th scope="col" className="px-8 py-4">{t('transactions')}</th>
-                                <th scope="col" className="px-8 py-4">{t('destination')}</th>
-                                <th scope="col" className="px-8 py-4 text-right">{t('status')}</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border-color/60">
-                            {MOCK_PAYOUTS.map((payout) => (
-                                <tr key={payout.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td className="px-8 py-5 text-sm font-bold text-text-primary tracking-tight">{new Date(payout.date).toLocaleDateString()}</td>
-                                    <td className="px-8 py-5 text-sm font-extrabold text-text-primary tracking-tight">{formatCurrency(payout.amount)}</td>
-                                    <td className="px-8 py-5 text-xs font-bold text-text-secondary">{payout.transactionCount}</td>
-                                    <td className="px-8 py-5 font-mono text-[10px] font-bold text-text-secondary">{payout.destination}</td>
-                                    <td className="px-8 py-5 text-right"><PayoutStatusBadge status={payout.status} /></td>
+                    {isLoading ? (
+                        <div className="p-8 flex flex-col items-center justify-center gap-3">
+                            <div className="w-5 h-5 rounded-full border-2 border-border-color border-t-text-secondary animate-spin"></div>
+                            <span className="text-[10px] font-bold text-text-secondary tracking-widest uppercase">{t('processing')}...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="p-8 flex flex-col items-center justify-center">
+                            <span className="text-[10px] font-bold text-red-600 tracking-widest uppercase">{error}</span>
+                        </div>
+                    ) : (
+                        <table className="w-full text-sm text-left relative">
+                            <thead className="text-[10px] text-text-secondary uppercase tracking-widest bg-background/50">
+                                <tr>
+                                    <th scope="col" className="px-8 py-4">{t('date')}</th>
+                                    <th scope="col" className="px-8 py-4">{t('totalAmount')}</th>
+                                    <th scope="col" className="px-8 py-4">{t('transactions')}</th>
+                                    <th scope="col" className="px-8 py-4">{t('destination')}</th>
+                                    <th scope="col" className="px-8 py-4 text-right">{t('status')}</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-border-color/60">
+                                {payouts.map((payout) => (
+                                    <tr key={payout.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-8 py-5 text-sm font-bold text-text-primary tracking-tight">{new Date(payout.date).toLocaleDateString()}</td>
+                                        <td className="px-8 py-5 text-sm font-extrabold text-text-primary tracking-tight">{formatCurrency(payout.amount, payout.currency)}</td>
+                                        <td className="px-8 py-5 text-xs font-bold text-text-secondary">{payout.transactionCount}</td>
+                                        <td className="px-8 py-5 font-mono text-[10px] font-bold text-text-secondary">{payout.destination}</td>
+                                        <td className="px-8 py-5 text-right"><PayoutStatusBadge status={payout.status} /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </Card>
         </div>

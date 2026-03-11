@@ -28,7 +28,7 @@ const PromptPayQR: React.FC<PromptPayQRProps> = ({ amount, phoneNumber = '081-23
     };
     
     return (
-        <div className="flex flex-col items-center p-6 bg-white rounded-2xl border border-border-color shadow-sm">
+        <div className="flex flex-col items-center p-4 sm:p-6 bg-white rounded-2xl border border-border-color shadow-sm w-full">
             <div className="mb-4 text-center">
                 <img 
                     src="https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png" 
@@ -39,10 +39,10 @@ const PromptPayQR: React.FC<PromptPayQRProps> = ({ amount, phoneNumber = '081-23
                 <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('qrPayment')}</p>
             </div>
             
-            <div className="relative p-4 bg-white border-4 border-primary rounded-xl mb-4">
+            <div className="relative p-2 sm:p-4 bg-white border-[3px] sm:border-4 border-primary rounded-xl mb-4">
                 {/* Mock QR Code */}
-                <div className="w-48 h-48 bg-slate-100 flex items-center justify-center relative overflow-hidden">
-                    <div className="grid grid-cols-8 gap-1 opacity-20">
+                <div className="w-32 h-32 sm:w-48 sm:h-48 bg-slate-100 flex items-center justify-center relative overflow-hidden">
+                    <div className="grid grid-cols-8 gap-0.5 sm:gap-1 opacity-20 w-full h-full">
                         {Array.from({ length: 64 }).map((_, i) => (
                             <div key={i} className={`w-5 h-5 ${Math.random() > 0.5 ? 'bg-black' : 'bg-transparent'}`}></div>
                         ))}

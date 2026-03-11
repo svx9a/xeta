@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { translations, TranslationKeys } from '../translations';
 
-type Language = 'en' | 'th' | 'vi' | 'id' | 'ms';
+export type Language = 'en' | 'th' | 'vi' | 'id' | 'ms' | 'ph' | 'kh' | 'mm' | 'la';
 
 interface LanguageContextType {
     currentLang: Language;
@@ -16,7 +16,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     useEffect(() => {
         const savedLang = localStorage.getItem('language') as Language;
-        const validLangs: Language[] = ['en', 'th', 'vi', 'id', 'ms'];
+        const validLangs: Language[] = ['en', 'th', 'vi', 'id', 'ms', 'ph', 'kh', 'mm', 'la'];
         if (savedLang && validLangs.includes(savedLang)) {
             setCurrentLang(savedLang);
         }

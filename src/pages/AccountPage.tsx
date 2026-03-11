@@ -2,7 +2,8 @@ import React from 'react';
 import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { MOCK_USER, MOCK_ACTIVITY_LOGS } from '../constants';
-import { ActivityLog, ActivityLogStatus } from '../types';
+import { ActivityLogStatus } from '../types';
+import { TranslationKeys } from '../translations';
 
 const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }) => {
     const { t } = useTranslation();
@@ -12,10 +13,10 @@ const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }
         pending: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
         failed: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800",
     };
-    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as any)}</span>;
+    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as TranslationKeys)}</span>;
 };
 
-const ProfileDetail: React.FC<{ labelKey: any; value: string }> = ({ labelKey, value }) => {
+const ProfileDetail: React.FC<{ labelKey: TranslationKeys; value: string }> = ({ labelKey, value }) => {
     const { t } = useTranslation();
     return (
         <div>
@@ -28,6 +29,7 @@ const ProfileDetail: React.FC<{ labelKey: any; value: string }> = ({ labelKey, v
 const AccountPage: React.FC = () => {
     const { t } = useTranslation();
     const user = MOCK_USER;
+    const roleLabel: TranslationKeys = user.role === 'Provider Admin' ? 'providerAdmin' : 'developer';
 
     return (
         <div className="space-y-7 animate-fadeIn max-w-5xl">
@@ -43,7 +45,7 @@ const AccountPage: React.FC = () => {
                         <p className="text-text-secondary font-medium">{user.email}</p>
                         <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
                              <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">
-                                {t(user.role as any)}
+                                {t(roleLabel)}
                              </span>
                         </div>
                     </div>
@@ -53,7 +55,7 @@ const AccountPage: React.FC = () => {
                 </div>
                 <div className="border-t border-border-color/60 my-8"></div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <ProfileDetail labelKey="role" value={t(user.role as any)} />
+                    <ProfileDetail labelKey="role" value={t(roleLabel)} />
                     <ProfileDetail labelKey="lastLogin" value={new Date(user.lastLogin).toLocaleString()} />
                 </div>
             </Card>

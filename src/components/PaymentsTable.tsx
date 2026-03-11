@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Payment, PaymentStatus } from '../types';
 import { getPaymentRisk } from '../services/geminiService';
 import { useTranslation } from '../contexts/LanguageContext';
+import { TranslationKeys } from '../translations';
 
 interface PaymentsTableProps {
     payments: Payment[];
@@ -20,7 +21,7 @@ const StatusBadge: React.FC<{ status: PaymentStatus }> = ({ status }) => {
         voided: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
         failed: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
     };
-    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as any)}</span>;
+    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as TranslationKeys)}</span>;
 };
 
 
@@ -129,7 +130,7 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments, onViewDetails, 
                                             <span className="text-[8px] font-bold">QR</span>
                                         )}
                                     </div>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">{t(p.paymentMethod as any)}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">{t(p.paymentMethod as TranslationKeys)}</span>
                                 </div>
                             </td>
                             <td className="px-6 py-4 text-text-primary font-bold">{formatCurrency(p.amount, p.currency)}</td>

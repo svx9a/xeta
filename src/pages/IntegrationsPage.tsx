@@ -3,6 +3,7 @@ import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { CheckCircleIcon, ExclamationCircleIcon } from '../components/icons';
 import Modal from '../components/Modal';
+import { TranslationKeys } from '../translations';
 
 const IntegrationsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -44,7 +45,7 @@ const IntegrationsPage: React.FC = () => {
                                 <h2 className="text-sm font-bold text-text-primary uppercase tracking-widest mb-2">{t('shopifyIntegration')}</h2>
                                  <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400`}>
                                     <CheckCircleIcon className="w-5 h-5" />
-                                    <span>{t(connectionStatus as any)}</span>
+                                    <span>{t(connectionStatus as TranslationKeys)}</span>
                                 </div>
                             </div>
                             <button onClick={() => setDisconnectModalOpen(true)} className="text-[10px] font-bold uppercase tracking-widest text-rose-500 hover:text-rose-700 transition-colors">{t('disconnect')}</button>
@@ -93,7 +94,7 @@ const IntegrationsPage: React.FC = () => {
                                 </button>
                                 <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400`}>
                                     <ExclamationCircleIcon className="w-5 h-5" />
-                                    <span>{t(connectionStatus as any)}</span>
+                                    <span>{t(connectionStatus as TranslationKeys)}</span>
                                 </div>
                             </div>
                         </form>

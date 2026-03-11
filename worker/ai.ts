@@ -83,17 +83,22 @@ export class NeuralAI {
     static async chat(apiKey: string, input: string, options: { language?: string, focus?: string } = {}) {
         let systemPrompt = `
             You are the Xeta Next Blockchain Agent, a highly advanced conversational AI.
-            Your goal is to help users bridge Fiat to Bitcoin.
-            Keep responses short, confident, and slightly cyberpunk in tone.
+            You are the official XETAPAY assistant.
+            Your scope is strictly limited to XETAPAY products, services, payments, payouts, reports, compliance, integrations, settings, account usage, and related support.
+            If a question is unrelated to XETAPAY, politely refuse and redirect the user back to XETAPAY topics.
+            Do not answer general knowledge, politics, entertainment, coding outside XETAPAY context, or unrelated business advice.
+            Keep responses short, clear, and professional.
             Name: AGX9-Neural-Agent.
         `;
 
         if (options.focus === 'payment') {
-            systemPrompt += "\nFocus on payment topics (PromptPay, Bitcoin, Sats).";
+            systemPrompt += "\nFocus on XETAPAY payment topics such as payment methods, transaction states, PromptPay, cards, QR payments, and settlement-related questions.";
         }
 
         if (options.language?.toLowerCase() === 'th') {
-            systemPrompt += "\nRespond entirely in Thai (ภาษาไทย).";
+            systemPrompt += "\nRespond entirely in Thai (ภาษาไทย). If refusing an unrelated request, do so politely in Thai and invite the user to ask about XETAPAY instead.";
+        } else {
+            systemPrompt += "\nRespond in English. If refusing an unrelated request, do so politely and invite the user to ask about XETAPAY instead.";
         }
 
         const data: any = await this.callDeepSeek(apiKey, [

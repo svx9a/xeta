@@ -46,6 +46,8 @@ export default {
             "https://xeta-pay-dashboard.sv9.workers.dev",
             "http://localhost:3000",
             "http://localhost:5173",
+            "http://localhost:8081",
+            "http://127.0.0.1:8081",
         ];
 
         const currentOrigin = allowedOrigins.includes(origin || "") ? (origin as string) : allowedOrigins[0];
@@ -141,9 +143,47 @@ export default {
                 return new Response(JSON.stringify({
                     payment_id: paymentId,
                     provider_id: bestAccount.provider_id,
-                    checkout_url: `https://checkout.xetapay.com/${paymentId}`,
+                    checkout_url: `${currentOrigin}/checkout/${paymentId}`,
                     score: bestAccount.score, // For dashboard debugging
                     fallback_provider_id: fallbackAccount?.provider_id || null
+                }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            // POST /api/quotations (Generate Payment Link & Quotation)
+            if (url.pathname === "/api/quotations" && request.method === "POST") {
+                const body = await request.json() as any;
+                const { merchant_id, customer_email, total_due } = body;
+                
+                // MOCK SAVING TO DB
+                const qtnId = `QTN-${new Date().toISOString().replace(/-/g, '').substring(0, 8)}${Math.floor(Math.random() * 1000)}`;
+                const paymentLinkId = `L/${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                
+                // Store in DB logically (mocking for now as we don't have D1 schema for quotations yet)
+                // await env.DB.prepare(`INSERT INTO quotations ...`).run();
+
+                return new Response(JSON.stringify({
+                    id: qtnId,
+                    payment_link: `${currentOrigin}/pay/${paymentLinkId}`,
+                    qr_code_enabled: true,
+                    status: 'PUBLISHED',
+                    created_at: new Date().toISOString()
+                }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            // GET /api/payment-links/:id (Retrieve Quotation Payment details for consumer)
+            if (url.pathname.startsWith("/api/payment-links/") && request.method === "GET") {
+                const linkId = url.pathname.replace("/api/payment-links/", "");
+                
+                // MOCK FETCH FROM DB
+                // const { results } = await env.DB.prepare(`SELECT * FROM quotations WHERE payment_link_id = ?`).bind(linkId).all();
+
+                return new Response(JSON.stringify({
+                    id: linkId,
+                    merchant_name: "XETA Corporation CO., LTD.",
+                    amount_thb: 5350.00,
+                    status: 'PENDING',
+                    metadata: { qtn_id: 'QTN-20261234' },
+                    expires_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
                 }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
             }
 
@@ -229,7 +269,38 @@ export default {
             }
 
             // ==========================================
-            // 3. MAE MANEE (SCB) INTEGRATION
+            // 3. AETHER BRIDGE & WEBHOOKS
+            // ==========================================
+
+            if (url.pathname === "/api/bridge/stream") {
+                return handleBridgeWebSocket(request);
+            }
+
+            if (url.pathname === "/api/bridge/webhook" && request.method === "POST") {
+                const signature = request.headers.get("X-Shopify-Hmac-Sha256") || "";
+                const payload = await request.json();
+                const result = await BridgeManager.processShopifyWebhook(env, payload, signature, deepseekKey);
+                return new Response(JSON.stringify(result), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            if (url.pathname === "/api/bridge/config" && request.method === "GET") {
+                const configs = await BridgeManager.getConfigs(env);
+                return new Response(JSON.stringify(configs), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            if (url.pathname === "/api/bridge/config" && request.method === "POST") {
+                const config = await request.json();
+                await BridgeManager.saveConfig(env, config);
+                return new Response(JSON.stringify({ status: "CONFIG_SAVED" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            if (url.pathname === "/api/bridge/logs" && request.method === "GET") {
+                const logs = JSON.parse(await env.BRIDGE_STORE.get('logs') || '[]');
+                return new Response(JSON.stringify(logs), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            // ==========================================
+            // 4. MAE MANEE (SCB) INTEGRATION
             // ==========================================
 
             if (url.pathname === "/v1/oauth/token" && request.method === "POST") {
@@ -257,7 +328,7 @@ export default {
                     status: { code: 1000, description: "Success" },
                     data: {
                         paymentLinkId: "PL-" + Math.random().toString(36).substring(7).toUpperCase(),
-                        paymentLinkUrl: "https://link.xetapay.com/pay/" + Math.random().toString(36).substring(7)
+                        paymentLinkUrl: currentOrigin + "/pay/" + Math.random().toString(36).substring(7)
                     }
                 }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
             }
@@ -321,7 +392,7 @@ export default {
                     message: "XETAPAY Unified Payment & AI Worker",
                     status: "CORE_READY",
                     engine: "AGX9-SOVEREIGN",
-                    documentation: "https://docs.xetapay.com",
+                    documentation: `${currentOrigin}/docs`,
                     timestamp: new Date().toISOString()
                 }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
             }

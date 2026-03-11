@@ -3,8 +3,10 @@ import Card from '../components/Card';
 import { CheckCircleIcon } from '../components/icons';
 import { useTranslation } from '../contexts/LanguageContext';
 import { MOCK_ACTIVITY_LOGS } from '../constants';
-import { ActivityLog, ActivityLogStatus } from '../types';
+import { ActivityLogStatus } from '../types';
+import { pingApi } from '../services/edgeClient';
 import Switch from '../components/Switch';
+import { TranslationKeys } from '../translations';
 
 interface DeveloperPageProps {
     isProduction: boolean;
@@ -21,7 +23,7 @@ const ApiKeyInput: React.FC<{ label: string; value: string; description: string 
                 value={value} 
                 className="w-full bg-white dark:bg-background border border-border-color/60 rounded-xl p-4 font-mono text-sm text-text-primary focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" 
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-text-secondary hover:text-primary transition-colors">
+            <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-text-secondary hover:text-primary transition-colors icon-active-aura">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
             </button>
         </div>
@@ -37,19 +39,18 @@ const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }
         pending: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
         failed: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800",
     };
-    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as any)}</span>;
+    return <span className={`${baseClasses} ${statusClasses[status]}`}>{t(status as TranslationKeys)}</span>;
 };
 
 
 const DeveloperPage: React.FC<DeveloperPageProps> = ({ isProduction, setIsProduction }) => {
-    const [apiStatus, setApiStatus] = useState<'idle' | 'pinging' | 'online'>('idle');
+    const [apiStatus, setApiStatus] = useState<'idle' | 'pinging' | 'online' | 'offline'>('idle');
     const { t } = useTranslation();
 
-    const handlePingApi = () => {
+    const handlePingApi = async () => {
         setApiStatus('pinging');
-        setTimeout(() => {
-            setApiStatus('online');
-        }, 1500);
+        const isOnline = await pingApi();
+        setApiStatus(isOnline ? 'online' : 'offline');
     };
 
     return (
@@ -123,11 +124,18 @@ const DeveloperPage: React.FC<DeveloperPageProps> = ({ isProduction, setIsProduc
                         
                         {apiStatus === 'online' && (
                             <div className="flex items-center gap-3 p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800 animate-fadeIn">
-                                <CheckCircleIcon className="w-5 h-5" />
+                                <CheckCircleIcon className="w-5 h-5 icon-active-aura" />
                                 <span>{t('apiOperational')}</span>
                             </div>
                         )}
                         
+                        {apiStatus === 'offline' && (
+                            <div className="flex items-center gap-3 p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-rose-50 text-rose-700 border border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800 animate-fadeIn">
+                                <svg className="w-5 h-5 icon-active-aura" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>API Offline</span>
+                            </div>
+                        )}
+
                         {apiStatus === 'idle' && (
                             <p className="text-xs font-bold text-text-secondary uppercase tracking-widest opacity-50">
                                 Ready to test connection

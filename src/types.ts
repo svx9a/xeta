@@ -1,7 +1,9 @@
 export type Page = 
   'home' | 
   'payments' | 
+  'quotation' |
   'payouts' |
+  'compliance' |
   'plugins' | 
   'integrations' |
   'developer' | 
