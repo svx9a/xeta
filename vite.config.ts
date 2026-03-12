@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
           // Only split ui vendor — react/react-dom must stay in the main chunk
           // to avoid empty chunk issues with Vite's module resolution
           manualChunks: {
-            'ui-vendor': ['lucide-react', 'recharts'],
+            'ui-vendor': ['recharts'],
           },
         },
       },
@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => {
       include: [
         'react',
         'react-dom',
-        'lucide-react',
+
         'recharts'
       ],
     },

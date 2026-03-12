@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Card from '../components/Card';
 import { CheckCircleIcon } from '../components/icons';
 import { useTranslation } from '../contexts/LanguageContext';
@@ -46,6 +47,7 @@ const ActivityStatusBadge: React.FC<{ status: ActivityLogStatus }> = ({ status }
 const DeveloperPage: React.FC<DeveloperPageProps> = ({ isProduction, setIsProduction }) => {
     const [apiStatus, setApiStatus] = useState<'idle' | 'pinging' | 'online' | 'offline'>('idle');
     const { t } = useTranslation();
+    const latexEnabled = import.meta.env.DEV || (import.meta as any)?.env?.VITE_ENABLE_LATEX_COMPILER === 'true';
 
     const handlePingApi = async () => {
         setApiStatus('pinging');
@@ -67,6 +69,21 @@ const DeveloperPage: React.FC<DeveloperPageProps> = ({ isProduction, setIsProduc
                     <Switch checked={isProduction} onChange={setIsProduction} />
                 </div>
             </Card>
+
+            {latexEnabled ? (
+                <Card>
+                    <h2 className="text-sm font-bold text-text-primary uppercase tracking-widest mb-3">Utilities</h2>
+                    <Link
+                        to="/latex"
+                        className="block p-6 rounded-2xl border border-border-color/60 bg-sidebar-bg/30 hover:bg-white/5 transition-all active:scale-[0.99]"
+                    >
+                        <div className="text-xs font-bold uppercase tracking-widest text-text-primary">LaTeX Compiler</div>
+                        <div className="text-xs text-text-secondary font-medium mt-1">
+                            Compile <span className="font-mono">.tex</span> to PDF locally via <span className="font-mono">tectonic</span>.
+                        </div>
+                    </Link>
+                </Card>
+            ) : null}
             
             <Card padding="p-0" className="overflow-hidden">
                 <div className="px-8 py-5 border-b border-border-color/60 bg-sidebar-bg/30">

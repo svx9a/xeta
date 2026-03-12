@@ -1,4 +1,4 @@
-export interface ShippingQuoteParams {
+interface ShippingQuoteParams {
   from: string;
   to: string;
   weight: number;

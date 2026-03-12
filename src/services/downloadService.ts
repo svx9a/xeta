@@ -5,7 +5,7 @@
  * Supports various file types, progress tracking simulation, and proper memory management.
  */
 
-export interface DownloadOptions {
+interface DownloadOptions {
     filename: string;
     contentType?: string;
     onProgress?: (progress: number) => void;

@@ -1,0 +1,91 @@
+account_balance
+Xetapay
+dashboard
+Dashboard
+swap_horiz
+Transactions
+account_balance
+Payment Methods
+analytics
+Analytics
+people
+Customers
+store
+Merchants
+settings
+Settings
+search
+notifications
+3
+help_outline
+AD
+Dashboard Overview
+
+Monitor your payment gateway performance and analytics
+
+account_balance_wallet
+Total Revenue
+฿2,562,750
+trending_up
++23.4% from last month
+receipt_long
+Transactions
+1,097
+trending_up
++12.5% from last month
+verified
+Success Rate
+86%
+trending_up
++0.3% from last month
+groups
+Active Users
+460
+trending_up
++8.2% from last month
+Revenue Overview
+Day
+Week
+Month
+Year
+Payment Methods
+Recent Transactions
+View All
+arrow_forward
+ST
+Somsak Trading Co.
+Lightning Network • 2 minutes ago
+฿125,000
+check_circle
+Completed
+BE
+Bangkok Electronics
+PromptPay • 5 minutes ago
+฿87,500
+pending
+Processing
+TS
+Thai Silk Emporium
+Cross-Border • 12 minutes ago
+฿45,000
+check_circle
+Completed
+GB
+Golden Buddha Restaurant
+Thai Blockchain • 18 minutes ago
+฿32,000
+schedule
+Pending
+Quick Actions
+send
+Send Payment
+Create and send new payment
+qr_code
+Generate QR
+Create payment QR code
+assessment
+View Reports
+Analytics and insights
+settings
+Settings
+Configure gateway

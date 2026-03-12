@@ -67,16 +67,7 @@ export async function fetchSettlements(): Promise<Payout[]> {
   );
 }
 
-export async function fetchRoutingPreview(): Promise<
-  { provider: string; fee_pct: number; fee_fixed: number; success_rate: number; score: number }[]
-> {
-  const data = await getJson<{
-    data: { provider: string; fee_pct: number; fee_fixed: number; success_rate: number; score: number }[];
-  }>("/api/routing/preview");
-  return data?.data ?? [];
-}
-
-export interface QuotationRequest {
+interface QuotationRequest {
     merchant_id: string;
     customer_email: string;
     total_due: number;

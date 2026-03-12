@@ -92,9 +92,11 @@ const ConsumerPaymentPage: React.FC = () => {
             <div className="w-full max-w-md space-y-6 animate-fadeIn">
                 {/* Header branding */}
                 <div className="text-center space-y-2 mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#0A2540] to-primary rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-primary/20">
-                         <span className="text-white font-black text-2xl tracking-tighter">X</span>
-                    </div>
+                    <img
+                        src="/icons/xeta-mark.png"
+                        alt="XETAPAY"
+                        className="w-16 h-16 mx-auto object-contain drop-shadow-lg"
+                    />
                     <div className="text-sm font-bold tracking-widest text-text-secondary uppercase">Secure Checkout</div>
                 </div>
 

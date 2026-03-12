@@ -1,25 +1,35 @@
 import { Payment, ActivityLog, Payout, User } from './types';
 
-export const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? "http://localhost:8787" 
+const getOrigin = () => {
+    if (typeof window !== 'undefined') {
+        const h = window.location.hostname;
+        if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.orb.local')) {
+            return `${window.location.protocol}//${window.location.host}`;
+        }
+    }
+    return null; // Signals it's not a local dev environment OR SSR
+};
+
+const localOrigin = getOrigin();
+
+export const API_BASE_URL = localOrigin 
+    ? `${localOrigin}` 
     : "https://xeta-pay-dashboard.sv9.workers.dev";
 
-export const AUTH_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? "http://localhost:8787" 
-    : "https://dragon-dance-transformers.sv9.workers.dev";
+export const AUTH_BASE_URL = localOrigin 
+    ? `${localOrigin}` 
+    : "https://xeta-pay-dashboard.sv9.workers.dev";
 
-export const AI_AGENT_URL = "https://anzu-flood-azure.sv9.workers.dev";
 export const NAV_LINKS = [
     { id: 'home', tKey: 'home', icon: 'HomeIcon' },
     { id: 'payments', tKey: 'payments', icon: 'CreditCardIcon' },
     { id: 'quotation', tKey: 'paymentLink', icon: 'LinkIcon' },
     { id: 'payouts', tKey: 'payouts', icon: 'PayoutsIcon' },
-    { id: 'compliance', tKey: 'compliance', icon: 'ShieldCheckIcon' },
-    { id: 'plugins', tKey: 'plugins', icon: 'PluginIcon' },
     { id: 'developer', tKey: 'developer', icon: 'CodeIcon' },
     { id: 'reports', tKey: 'reports', icon: 'ReportsIcon' },
     { id: 'settings', tKey: 'settings', icon: 'SettingsIcon' },
     { id: 'account', tKey: 'account', icon: 'UserIcon' },
+    { id: 'ai-video', tKey: 'aiVideoDirectory', icon: 'VideoIcon' },
 ] as const;
 
 

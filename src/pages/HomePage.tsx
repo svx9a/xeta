@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
     const paymentStats = useMemo(() => calculateStats(payments), [payments]);
     
     return (
-        <div className="space-y-8 animate-fadeIn max-w-7xl">
+        <div className="space-y-8 animate-fadeIn w-full max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-2">
                 <div>
                     <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">{t('home')}</h1>

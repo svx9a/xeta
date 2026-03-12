@@ -8,6 +8,7 @@ import { BridgeManager, handleBridgeWebSocket } from './bridge';
 import { NeuralAI } from './ai';
 import { RoutingEngine, ProviderAccount } from './router';
 import { getShippingQuotes } from '../src/services/shippingService';
+import { BitkubClient } from './exchanges/bitkub';
 
 // Inlined from deleted commerceConfig.ts + taxService.ts
 type AseanCountry = 'Brunei' | 'Cambodia' | 'Indonesia' | 'Laos' | 'Malaysia' | 'Myanmar' | 'Philippines' | 'Singapore' | 'Thailand' | 'Vietnam';
@@ -39,6 +40,9 @@ export interface Env {
     AI: { run: (model: string, input: { prompt: string; stream?: boolean } | Record<string, unknown>) => Promise<unknown> };
     DEEPSEEK_API_KEY?: string;
     TURNSTILE_SECRET_KEY?: string;
+    TRANSFORMERS_URL?: string;
+    TRANSFORMERS_API_KEY?: string;
+    HEALTH_CHECK_SECRET?: string;
 }
 
 const NeuralShield = {
@@ -109,6 +113,137 @@ async function authenticateMerchant(env: Env, request: Request) {
     return merchant ? { merchant } : null;
 }
 
+type AiChatRequest = {
+    message: string;
+    language?: string;
+    focus?: string;
+    profile?: 'fast' | 'balanced' | 'quality' | 'code';
+};
+
+async function callWorkersAiChat(env: Env, body: AiChatRequest): Promise<string> {
+    const profile = body.profile || "balanced";
+    const modelByProfile: Record<NonNullable<AiChatRequest["profile"]>, string> = {
+        fast: "@cf/mistral/mistral-7b-instruct-v0.1",
+        balanced: "@cf/meta/llama-3.1-8b-instruct",
+        quality: "@cf/meta/llama-3.1-70b-instruct",
+        code: "@cf/deepseek-ai/deepseek-coder-6.7b-instruct",
+    };
+
+    const messages = [
+        {
+            role: "system",
+            content:
+                "You are XETA Assistant for XETAPAY. Be concise and practical. Prefer XETAPAY-specific answers; if the user asks something unrelated, steer them back to XETAPAY topics.",
+        },
+        {
+            role: "user",
+            content:
+                `Language: ${body.language || "en"}\n` +
+                `Focus: ${body.focus || "all"}\n` +
+                `${body.message}`,
+        },
+    ];
+
+    const result = await env.AI.run(modelByProfile[profile as NonNullable<AiChatRequest["profile"]>] || modelByProfile.balanced, {
+        messages,
+    });
+
+    if (typeof result === "string") return result.trim();
+
+    const content =
+        (result as any)?.response ??
+        (result as any)?.result ??
+        (result as any)?.output ??
+        (result as any)?.choices?.[0]?.message?.content ??
+        "";
+
+    if (typeof content !== "string" || content.trim().length === 0) {
+        throw new Error("WORKERS_AI_EMPTY_RESPONSE");
+    }
+
+    return content.trim();
+}
+
+async function callTransformersChat(env: Env, body: AiChatRequest): Promise<string> {
+    const baseUrl = (env.TRANSFORMERS_URL || "https://dragon-dance-transformers.sv9.workers.dev").replace(/\/+$/, "");
+    const url = `${baseUrl}/v1/chat/completions`;
+
+    const profile = body.profile || "balanced";
+    const modelByProfile: Record<NonNullable<AiChatRequest["profile"]>, string> = {
+        fast: "@cf/mistral/mistral-7b-instruct-v0.1",
+        balanced: "@cf/meta/llama-3.1-8b-instruct",
+        quality: "@cf/meta/llama-3.1-70b-instruct",
+        code: "@cf/deepseek-ai/deepseek-coder-6.7b-instruct",
+    };
+
+    const messages = [
+        {
+            role: "system",
+            content:
+                "You are XETA Assistant for XETAPAY. Be concise and practical. Prefer XETAPAY-specific answers; if the user asks something unrelated, steer them back to XETAPAY topics.",
+        },
+        {
+            role: "user",
+            content:
+                `Language: ${body.language || "en"}\n` +
+                `Focus: ${body.focus || "all"}\n` +
+                `${body.message}`,
+        },
+    ];
+
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (env.TRANSFORMERS_API_KEY) {
+        headers.Authorization = `Bearer ${env.TRANSFORMERS_API_KEY}`;
+        headers["X-API-Key"] = env.TRANSFORMERS_API_KEY;
+    }
+
+    const tryOnce = async (model: string) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                // Some gateways require `model`; dragon-dance advertises "profiles".
+                // Send both; upstream can ignore what it doesn't understand.
+                model,
+                profile,
+                messages,
+                temperature: 0.4,
+            }),
+        });
+        return res;
+    };
+
+    // Attempt 1: assume upstream wants the real CF model id.
+    const model1 = modelByProfile[profile as NonNullable<AiChatRequest["profile"]>] || modelByProfile.balanced;
+    let res = await tryOnce(model1);
+
+    // Attempt 2: some gateways expect `model` to be the profile string itself (e.g. "balanced").
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        if (res.status === 404 && errText.includes("1042")) {
+            res = await tryOnce(profile);
+        } else {
+            throw new Error(`TRANSFORMERS_UPSTREAM_${res.status}${errText ? `: ${errText.slice(0, 500)}` : ""}`);
+        }
+    }
+
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`TRANSFORMERS_UPSTREAM_${res.status}${errText ? `: ${errText.slice(0, 500)}` : ""}`);
+    }
+
+    const data = (await res.json()) as any;
+    const content =
+        data?.choices?.[0]?.message?.content ??
+        data?.choices?.[0]?.delta?.content ??
+        data?.response ??
+        "";
+    if (typeof content !== "string" || content.trim().length === 0) {
+        throw new Error("TRANSFORMERS_EMPTY_RESPONSE");
+    }
+    return content.trim();
+}
+
 export default {
     async fetch(request: Request, env: Env) {
         const url = new URL(request.url);
@@ -119,6 +254,7 @@ export default {
             "https://xeta-next.pages.dev",
             "https://59cfd95f.xetapay-9jp.pages.dev",
             "https://f7429329.xetapay-9jp.pages.dev",
+            "https://main.xetapay-9jp.pages.dev",
             "https://xeta-pay-dashboard.sv9.workers.dev",
             "http://localhost:3000",
             "http://localhost:5173",
@@ -127,7 +263,20 @@ export default {
             "https://sincere-chassis-52hmx.trycloudflare.com",
         ];
 
-        const currentOrigin = allowedOrigins.includes(origin || "") ? (origin as string) : allowedOrigins[0];
+        const isAllowedOrigin = (value: string | null) => {
+            if (!value) return false;
+            if (allowedOrigins.includes(value)) return true;
+            try {
+                const host = new URL(value).hostname;
+                // Allow any preview under the same Pages project (xetapay-9jp).
+                if (host.endsWith(".xetapay-9jp.pages.dev")) return true;
+            } catch {
+                return false;
+            }
+            return false;
+        };
+
+        const currentOrigin = isAllowedOrigin(origin) ? (origin as string) : allowedOrigins[0];
 
         const corsHeaders: Record<string, string> = {
             "Access-Control-Allow-Origin": currentOrigin,
@@ -140,7 +289,7 @@ export default {
             return new Response(null, { headers: corsHeaders });
         }
 
-        const deepseekKey = env.DEEPSEEK_API_KEY || "sk-146a19ac9c4d4ad8ac3ed9192a79a514";
+        const deepseekKey = env.DEEPSEEK_API_KEY || "";
 
         try {
             // ==========================================
@@ -239,7 +388,7 @@ export default {
                 }
                 
                 // CRITICAL: Ensure merchant exists
-                const merchant = await env.DB.prepare("SELECT * FROM merchants WHERE id = ?").bind(merchant_id).first<{ tenant_id: string }>();
+                const merchant = await env.DB.prepare("SELECT * FROM merchants WHERE id = ?").bind(merchant_id).first<{ tenant_id?: string }>();
                 if (!merchant) {
                     return new Response(JSON.stringify({ error: "MERCHANT_NOT_FOUND" }), { status: 404, headers: corsHeaders });
                 }
@@ -252,7 +401,7 @@ export default {
                 await env.DB.prepare(`
                     INSERT INTO ticket_orders (id, tenant_id, merchant_id, price_thb, status, created_at)
                     VALUES (?, ?, ?, ?, 'PENDING', CURRENT_TIMESTAMP)
-                `).bind(qtnId, merchant.tenant_id, merchant_id, total_due).run();
+                `).bind(qtnId, merchant.tenant_id || 'TENANT-001', merchant_id, total_due).run();
 
                 // Map the Link ID in KV for fast resolution (Edge-first)
                 await env.BRIDGE_STORE.put(`pl:${paymentLinkId}`, JSON.stringify({
@@ -320,6 +469,48 @@ export default {
             // ==========================================
             // 2. ANALYTICS & DASHBOARD (AGX9 ENGINE) - For the active UI
             // ==========================================
+
+            // ==========================================
+            // 2.1 MARKET DATA (Bitkub public proxy)
+            // ==========================================
+            if (url.pathname === "/api/market/bitkub/servertime" && request.method === "GET") {
+                const cacheKey = "market:bitkub:servertime";
+                const cached = await env.BRIDGE_STORE.get(cacheKey);
+                if (cached) return new Response(cached, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+                const client = new BitkubClient();
+                const data = await client.publicServerTime();
+                const payload = JSON.stringify(data);
+                // KV minimum TTL is 60s
+                await env.BRIDGE_STORE.put(cacheKey, payload, { expirationTtl: 60 });
+                return new Response(payload, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            if (url.pathname === "/api/market/bitkub/symbols" && request.method === "GET") {
+                const cacheKey = "market:bitkub:symbols";
+                const cached = await env.BRIDGE_STORE.get(cacheKey);
+                if (cached) return new Response(cached, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+                const client = new BitkubClient();
+                const data = await client.publicSymbols();
+                const payload = JSON.stringify(data);
+                await env.BRIDGE_STORE.put(cacheKey, payload, { expirationTtl: 60 });
+                return new Response(payload, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
+
+            if (url.pathname === "/api/market/bitkub/ticker" && request.method === "GET") {
+                const sym = url.searchParams.get("sym") || "";
+                const cacheKey = `market:bitkub:ticker:${sym || "ALL"}`;
+                const cached = await env.BRIDGE_STORE.get(cacheKey);
+                if (cached) return new Response(cached, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+                const client = new BitkubClient();
+                const data = await client.publicTicker(sym || undefined);
+                const payload = JSON.stringify(data);
+                // KV minimum TTL is 60s
+                await env.BRIDGE_STORE.put(cacheKey, payload, { expirationTtl: 60 });
+                return new Response(payload, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+            }
 
             if (url.pathname === "/api/routing/preview" && request.method === "GET") {
                 const { results: accounts } = await env.DB.prepare(
@@ -593,7 +784,7 @@ export default {
                 await env.DB.prepare(`
                     INSERT INTO ticket_orders (id, tenant_id, merchant_id, price_thb, status, created_at)
                     VALUES (?, ?, ?, ?, 'PENDING', CURRENT_TIMESTAMP)
-                `).bind(qtnId, auth.merchant.tenant_id, auth.merchant.id, body.total_due).run();
+                `).bind(qtnId, (auth.merchant as any)?.tenant_id || 'TENANT-001', auth.merchant.id, body.total_due).run();
 
                 await env.BRIDGE_STORE.put(`pl:${paymentLinkId}`, JSON.stringify({
                     qtn_id: qtnId,
@@ -618,15 +809,80 @@ export default {
             // 6. AI & STATUS
             // ==========================================
 
+            // Unified AI endpoint for dashboard UI (adapter over external AI workers)
+            if (url.pathname === "/api/ai/chat" && request.method === "POST") {
+                const body = await request.json() as AiChatRequest;
+                if (!body?.message || typeof body.message !== "string") {
+                    return new Response(JSON.stringify({ error: "INVALID_MESSAGE" }), {
+                        status: 400,
+                        headers: { ...corsHeaders, "Content-Type": "application/json" },
+                    });
+                }
+
+                // Validate message length to prevent abuse
+                if (body.message.length > 10000) {
+                    return new Response(JSON.stringify({ error: "MESSAGE_TOO_LONG", maxLength: 10000 }), {
+                        status: 400,
+                        headers: { ...corsHeaders, "Content-Type": "application/json" },
+                    });
+                }
+
+                try {
+                    const response = await callWorkersAiChat(env, body);
+                    return new Response(JSON.stringify({ response }), {
+                        headers: { ...corsHeaders, "Content-Type": "application/json" },
+                    });
+                } catch (e) {
+                    try {
+                        const response = await callTransformersChat(env, body);
+                        return new Response(JSON.stringify({ response }), {
+                            headers: { ...corsHeaders, "Content-Type": "application/json" },
+                        });
+                    } catch (transformersErr) {
+                        console.warn("Transformers fallback failed:", transformersErr);
+
+                        // Fallback to legacy DeepSeek path if configured
+                        try {
+                        const fallback = await NeuralAI.chat(env.DEEPSEEK_API_KEY || "", body.message, {
+                            focus: body.focus,
+                            language: body.language,
+                        });
+                        return new Response(JSON.stringify({ response: fallback.response }), {
+                            headers: { ...corsHeaders, "Content-Type": "application/json" },
+                        });
+                    } catch (fallbackErr) {
+                        const msg = (e as Error)?.message || "AI_UNAVAILABLE";
+                        console.warn("AI adapter failed", msg, fallbackErr);
+                        return new Response(JSON.stringify({ error: "AI_UNAVAILABLE", details: msg }), {
+                            status: 502,
+                            headers: { ...corsHeaders, "Content-Type": "application/json" },
+                        });
+                    }
+                }
+            }
+
             if (url.pathname === "/api/agent" && request.method === "POST") {
-                const { message, focus, language } = await request.json() as { message: string, focus?: string, language?: string };
-                const response = await NeuralAI.chat(deepseekKey, message, { focus, language });
-                return new Response(JSON.stringify(response), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+                const { message, focus, language, profile } = await request.json() as { message: string, focus?: string, language?: string, profile?: 'fast' | 'balanced' | 'quality' | 'code' };
+                try {
+                    const response = await callWorkersAiChat(env, { message, focus, language, profile });
+                    return new Response(JSON.stringify({ response, intent: "CHAT" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+                } catch (e) {
+                    try {
+                        const response = await callTransformersChat(env, { message, focus, language, profile });
+                        return new Response(JSON.stringify({ response, intent: "CHAT" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+                    } catch {}
+                    if (!deepseekKey) {
+                        return new Response(JSON.stringify({ error: "AI_UNAVAILABLE" }), { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+                    }
+                    const response = await NeuralAI.chat(deepseekKey, message, { focus, language });
+                    return new Response(JSON.stringify(response), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+                }
             }
 
             if (url.pathname === "/api/health/run" && request.method === "POST") {
                 const authHeader = request.headers.get("Authorization");
-                if (!authHeader || authHeader !== "Bearer xeta_internal_admin_123") {
+                const expectedToken = env.HEALTH_CHECK_SECRET || "xeta_internal_admin_123";
+                if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
                     return new Response(JSON.stringify({ error: "UNAUTHORIZED_HEALTH_TRIGGER" }), { status: 401, headers: corsHeaders });
                 }
                 return new Response(JSON.stringify({ status: "HEALTH_CHECK_COMPLETED", timestamp: new Date().toISOString() }), { headers: corsHeaders });

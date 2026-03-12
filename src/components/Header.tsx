@@ -74,8 +74,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, theme, setTheme, isProduct
                             aria-expanded={isMenuOpen}
                             aria-haspopup="true"
                         >
-                            <div className="w-10 h-10 rounded-full satin-effect text-white flex items-center justify-center font-bold text-lg shadow-satin icon-active-aura">
-                                X
+                            <div className="w-10 h-10 rounded-full satin-effect shadow-satin icon-active-aura flex items-center justify-center overflow-hidden">
+                                <img src="/icons/xeta-mark.png" alt="XETAPAY" className="w-7 h-7 object-contain" />
                             </div>
                         </button>
                         {isMenuOpen && (

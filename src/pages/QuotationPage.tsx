@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Card from '../components/Card';
 import { useTranslation } from '../contexts/LanguageContext';
 import { QrCodeIcon, LinkIcon, DownloadIcon, CheckCircleIcon } from '../components/icons';
 import PromptPayQR from '../components/PromptPayQR';
+import { compileLatexToPdf, downloadBlob } from '../services/latexCompile';
 
 interface QuotationItem {
     id: string;
@@ -12,11 +13,16 @@ interface QuotationItem {
 }
 
 const QuotationPage: React.FC = () => {
-    const { t, currentLang } = useTranslation();
-    const [customerName, setCustomerName] = useState('');
-    const [customerEmail, setCustomerEmail] = useState('');
-    const [customerAddress, setCustomerAddress] = useState('');
-    const [customerTaxId, setCustomerTaxId] = useState('');
+	    const { t, currentLang } = useTranslation();
+	    const quotationId = useMemo(() => {
+	        const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+	        const rand = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+	        return `QTN-${stamp}${rand}`;
+	    }, []);
+	    const [customerName, setCustomerName] = useState('');
+	    const [customerEmail, setCustomerEmail] = useState('');
+	    const [customerAddress, setCustomerAddress] = useState('');
+	    const [customerTaxId, setCustomerTaxId] = useState('');
     const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
     const [dueDate, setDueDate] = useState(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
     const [applyWht, setApplyWht] = useState(false);
@@ -25,9 +31,11 @@ const QuotationPage: React.FC = () => {
     const [items, setItems] = useState<QuotationItem[]>([
         { id: '1', description: 'Service Fee', quantity: 1, price: 1000 }
     ]);
-    const [isGenerated, setIsGenerated] = useState(false);
-    const [generatedLink, setGeneratedLink] = useState('');
-    const [isCopied, setIsCopied] = useState(false);
+	    const [isGenerated, setIsGenerated] = useState(false);
+	    const [generatedLink, setGeneratedLink] = useState('');
+	    const [isCopied, setIsCopied] = useState(false);
+	    const [isPdfGenerating, setIsPdfGenerating] = useState(false);
+	    const [pdfError, setPdfError] = useState<string | null>(null);
 
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const tax = subtotal * 0.07;
@@ -54,12 +62,101 @@ const QuotationPage: React.FC = () => {
         setTimeout(() => setIsCopied(false), 2000);
     };
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat(currentLang === 'th' ? 'th-TH' : 'en-US', {
-            style: 'currency',
-            currency: 'THB',
-        }).format(amount);
-    };
+	    const formatCurrency = (amount: number) => {
+	        return new Intl.NumberFormat(currentLang === 'th' ? 'th-TH' : 'en-US', {
+	            style: 'currency',
+	            currency: 'THB',
+	        }).format(amount);
+	    };
+
+	    const escapeLatex = (value: string) =>
+	        value
+	            .replace(/\\/g, '\\textbackslash{}')
+	            .replace(/&/g, '\\&')
+	            .replace(/%/g, '\\%')
+	            .replace(/\$/g, '\\$')
+	            .replace(/#/g, '\\#')
+	            .replace(/_/g, '\\_')
+	            .replace(/{/g, '\\{')
+	            .replace(/}/g, '\\}')
+	            .replace(/~/g, '\\textasciitilde{}')
+	            .replace(/\^/g, '\\textasciicircum{}');
+
+	    const buildQuotationTex = () => {
+	        const title = currentLang === 'th' ? 'QUOTATION / BILL' : 'QUOTATION / BILL';
+	        const merchantName = 'XETAPAY';
+	        const lines = [
+	            String.raw`\documentclass[11pt]{article}`,
+	            String.raw`\usepackage[a4paper,margin=1in]{geometry}`,
+	            String.raw`\usepackage{array}`,
+	            String.raw`\usepackage{tabularx}`,
+	            String.raw`\usepackage{xcolor}`,
+	            String.raw`\usepackage{hyperref}`,
+	            String.raw`\hypersetup{hidelinks}`,
+	            String.raw`\setlength{\parindent}{0pt}`,
+	            String.raw`\begin{document}`,
+	            String.raw`\color{black}`,
+	            String.raw`\begin{tabularx}{\textwidth}{X r}`,
+	            String.raw`{\Large\bfseries ` + escapeLatex(merchantName) + String.raw`} & {\bfseries ` + escapeLatex(title) + String.raw`}\\`,
+	            String.raw`\end{tabularx}`,
+	            String.raw`\vspace{10pt}`,
+	            String.raw`\hrule \vspace{10pt}`,
+	            String.raw`\begin{tabularx}{\textwidth}{X X}`,
+	            String.raw`{\bfseries Bill To} & {\bfseries Details}\\`,
+	            escapeLatex(customerName || '-') + String.raw` & ` + escapeLatex(quotationId) + String.raw`\\`,
+	            escapeLatex(customerEmail || '-') + String.raw` & Issue Date: ` + escapeLatex(issueDate) + String.raw`\\`,
+	            escapeLatex(customerAddress || '-') + String.raw` & Due Date: ` + escapeLatex(dueDate) + String.raw`\\`,
+	            (customerTaxId ? (String.raw`Tax ID: ` + escapeLatex(customerTaxId)) : escapeLatex('')) + String.raw` & Currency: THB\\`,
+	            String.raw`\end{tabularx}`,
+	            String.raw`\vspace{14pt}`,
+	            String.raw`\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X r r r}`,
+	            String.raw`\bfseries Description & \bfseries Qty & \bfseries Unit & \bfseries Total\\ \hline`,
+	            ...items.map((it) => {
+	                const totalLine = it.price * it.quantity;
+	                return (
+	                    escapeLatex(it.description || '-') +
+	                    String.raw` & ` +
+	                    escapeLatex(String(it.quantity)) +
+	                    String.raw` & ` +
+	                    escapeLatex(it.price.toFixed(2)) +
+	                    String.raw` & ` +
+	                    escapeLatex(totalLine.toFixed(2)) +
+	                    String.raw`\\`
+	                );
+	            }),
+	            String.raw`\hline`,
+	            String.raw`\end{tabularx}`,
+	            String.raw`\vspace{10pt}`,
+	            String.raw`\begin{tabularx}{\textwidth}{X r}`,
+	            String.raw`Subtotal & ` + escapeLatex(subtotal.toFixed(2)) + String.raw`\\`,
+	            String.raw`VAT (7\%) & ` + escapeLatex(tax.toFixed(2)) + String.raw`\\`,
+	            applyWht ? (String.raw`WHT (3\%) & -` + escapeLatex(wht.toFixed(2)) + String.raw`\\`) : String.raw`WHT (3\%) & 0.00\\`,
+	            String.raw`\bfseries Total Due & \bfseries ` + escapeLatex(total.toFixed(2)) + String.raw`\\`,
+	            String.raw`\end{tabularx}`,
+	            notes
+	                ? String.raw`\vspace{12pt}{\bfseries Notes}\\` + escapeLatex(notes)
+	                : '',
+	            String.raw`\vfill`,
+	            String.raw`Payment Link: \href{` + escapeLatex(generatedLink || 'https://xetapay.com') + String.raw`}{` + escapeLatex(generatedLink || 'https://xetapay.com') + String.raw`}`,
+	            String.raw`\end{document}`,
+	        ].filter(Boolean);
+	        return lines.join('\n');
+	    };
+
+	    const handleGeneratePdf = async () => {
+	        if (isPdfGenerating) return;
+	        setPdfError(null);
+	        setIsPdfGenerating(true);
+	        try {
+	            const tex = buildQuotationTex();
+	            const blob = await compileLatexToPdf(tex);
+	            downloadBlob(blob, `${quotationId}.pdf`);
+	        } catch (e) {
+	            setPdfError(e instanceof Error ? e.message : 'Failed to generate PDF');
+	        } finally {
+	            setIsPdfGenerating(false);
+	        }
+	    };
 
     return (
         <div className="animate-fadeIn max-w-5xl mx-auto">
@@ -80,7 +177,7 @@ const QuotationPage: React.FC = () => {
                 )}
             </div>
 
-            {!isGenerated ? (
+	            {!isGenerated ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left: Form */}
                     <div className="lg:col-span-2 space-y-6">
@@ -293,25 +390,25 @@ const QuotationPage: React.FC = () => {
                         </Card>
                     </div>
                 </div>
-            ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+	            ) : (
+	                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
                     {/* Quotation Preview */}
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white dark:bg-sidebar-bg/10 rounded-[2rem] border border-border-color shadow-2xl overflow-hidden min-h-[600px] relative">
                             {/* Decorative Header */}
                             <div className="h-2 bg-primary w-full"></div>
-                            <div className="p-12">
-                                <div className="flex justify-between items-start mb-16">
-                                    <div>
-                                        <div className="text-3xl font-black tracking-tighter text-primary mb-2">XETAPAY</div>
-                                        <div className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em]">{currentLang === 'th' ? 'ใบเสนอราคาทางการ' : 'OFFICIAL QUOTATION'}</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-sm font-bold text-text-primary">QTN-{issueDate.replace(/-/g, '').substring(0, 8)}{Math.floor(Math.random() * 1000)}</div>
-                                        <div className="text-[10px] text-text-secondary uppercase mt-1">Date: {new Date(issueDate).toLocaleDateString()}</div>
-                                        <div className="text-[10px] text-text-secondary uppercase mt-1">Due: {new Date(dueDate).toLocaleDateString()}</div>
-                                    </div>
-                                </div>
+	                            <div className="p-12">
+	                                <div className="flex justify-between items-start mb-16">
+	                                    <div>
+	                                        <div className="text-3xl font-black tracking-tighter text-primary mb-2">XETAPAY</div>
+	                                        <div className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em]">{currentLang === 'th' ? 'ใบเสนอราคาทางการ' : 'OFFICIAL QUOTATION'}</div>
+	                                    </div>
+	                                    <div className="text-right">
+	                                        <div className="text-sm font-bold text-text-primary">{quotationId}</div>
+	                                        <div className="text-[10px] text-text-secondary uppercase mt-1">Date: {new Date(issueDate).toLocaleDateString()}</div>
+	                                        <div className="text-[10px] text-text-secondary uppercase mt-1">Due: {new Date(dueDate).toLocaleDateString()}</div>
+	                                    </div>
+	                                </div>
 
                                 <div className="grid grid-cols-2 gap-12 mb-16">
                                     <div>
@@ -384,11 +481,16 @@ const QuotationPage: React.FC = () => {
                     </div>
 
                     {/* Actions Panel */}
-                    <div className="space-y-6">
-                        <Card>
+	                    <div className="space-y-6">
+	                        <Card>
                             <h2 className="text-sm font-bold uppercase tracking-widest text-text-primary mb-6">{currentLang === 'th' ? 'ลิงก์การชำระเงิน' : 'Payment Link Created'}</h2>
-                            <div className="space-y-6">
-                                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-4">
+	                            <div className="space-y-6">
+	                                {pdfError ? (
+	                                    <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-bold tracking-widest uppercase">
+	                                        {pdfError}
+	                                    </div>
+	                                ) : null}
+	                                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white">
                                         <CheckCircleIcon className="w-6 h-6" />
                                     </div>
@@ -427,15 +529,19 @@ const QuotationPage: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 mt-6">
-                                    <button className="flex items-center justify-center gap-2 py-3 bg-white border border-border-color/60 rounded-xl text-[10px] font-bold uppercase tracking-widest text-text-secondary hover:bg-gray-50 transition-colors icon-active-aura">
-                                        <DownloadIcon className="w-4 h-4" />
-                                        PDF
-                                    </button>
-                                    <button className="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity icon-active-aura">
-                                        <QrCodeIcon className="w-4 h-4" />
-                                        Print QR
-                                    </button>
+	                                <div className="grid grid-cols-2 gap-4 mt-6">
+	                                    <button
+	                                        onClick={handleGeneratePdf}
+	                                        disabled={isPdfGenerating}
+	                                        className="flex items-center justify-center gap-2 py-3 bg-white border border-border-color/60 rounded-xl text-[10px] font-bold uppercase tracking-widest text-text-secondary hover:bg-gray-50 transition-colors icon-active-aura disabled:opacity-50 disabled:cursor-not-allowed"
+	                                    >
+	                                        <DownloadIcon className="w-4 h-4" />
+	                                        {isPdfGenerating ? 'Generating…' : 'PDF'}
+	                                    </button>
+	                                    <button className="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity icon-active-aura">
+	                                        <QrCodeIcon className="w-4 h-4" />
+	                                        Print QR
+	                                    </button>
                                 </div>
                             </div>
                         </Card>

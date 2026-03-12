@@ -12,14 +12,15 @@ export const translations = {
         settings: 'Settings',
         account: 'Account',
         quantumLedgerSecured: 'Enterprise Immutable Ledger',
-        
+        aiVideoDirectory: 'AI Video Directory',
+
         // Header
         sandboxMode: 'Sandbox Mode',
         productionMode: 'Production Mode',
         providerAdmin: 'Provider Admin',
         viewProfile: 'View Profile',
         logout: 'Log Out',
-        
+
         // Home Page
         todaySoFar: 'Today so far',
         yesterday: 'Yesterday',
@@ -52,7 +53,7 @@ export const translations = {
         void: 'Void',
         refund: 'Refund',
         capture: 'Capture',
-        
+
         // Payment Statuses
         authorized: 'Authorized',
         captured: 'Captured',
@@ -60,7 +61,7 @@ export const translations = {
         partially_refunded: 'Partially Refunded',
         voided: 'Voided',
         failed: 'Failed',
-        
+
         // Refund Modal
         maxRefundable: 'Maximum refundable amount',
         refundAmount: 'Refund Amount',
@@ -68,7 +69,7 @@ export const translations = {
         errorAmountExceeds: 'Amount cannot exceed {{max}}',
         errorAmountPositive: 'Amount must be positive',
         errorInvalidAmount: 'Please enter a valid refund amount.',
-        
+
         // Developer Page
         developerTools: 'Developer Tools',
         environmentSettings: 'Environment Settings',
@@ -88,7 +89,7 @@ export const translations = {
         pingAPI: 'Ping API',
         pinging: 'Pinging...',
         apiOperational: 'API is operational. Latency: 45ms',
-        
+
         // Settings Page
         securitySettings: 'Security Settings',
         biometricAuth: 'Biometric Authentication',
@@ -147,7 +148,7 @@ export const translations = {
         // Payout Statuses
         completed: 'Completed',
         in_transit: 'In Transit',
-        
+
         // Account Page
         profile: 'Profile',
         role: 'Role',
@@ -183,7 +184,7 @@ export const translations = {
         splitPayment: 'Split Payment',
         agency: 'Agency',
         agencies: 'Agencies',
-        
+
         // Coming Soon
         comingSoon: 'Coming Soon...',
     },
@@ -200,14 +201,15 @@ export const translations = {
         settings: 'การตั้งค่า',
         account: 'บัญชี',
         quantumLedgerSecured: 'ระบบรักษาความปลอดภัยระดับองค์กร',
-        
+        aiVideoDirectory: 'ไดเรกทอรีวิดีโอ AI',
+
         // Header
         sandboxMode: 'โหมดทดสอบ',
         productionMode: 'โหมดใช้งานจริง',
         providerAdmin: 'ผู้ดูแลระบบ',
         viewProfile: 'ดูโปรไฟล์',
         logout: 'ออกจากระบบ',
-        
+
         // Home Page
         todaySoFar: 'วันนี้',
         yesterday: 'เมื่อวาน',
@@ -240,7 +242,7 @@ export const translations = {
         void: 'ยกเลิก',
         refund: 'คืนเงิน',
         capture: 'เรียกเก็บเงิน',
-        
+
         // Payment Statuses
         authorized: 'อนุมัติแล้ว',
         captured: 'เรียกเก็บแล้ว',
@@ -256,7 +258,7 @@ export const translations = {
         errorAmountExceeds: 'จำนวนเงินต้องไม่เกิน {{max}}',
         errorAmountPositive: 'จำนวนเงินต้องเป็นบวก',
         errorInvalidAmount: 'กรุณาใส่จำนวนเงินที่ถูกต้อง',
-        
+
         // Developer Page
         developerTools: 'เครื่องมือสำหรับนักพัฒนา',
         environmentSettings: 'การตั้งค่าสภาพแวดล้อม',
@@ -289,7 +291,7 @@ export const translations = {
         scanQrCode: 'สแกน QR code ด้วยแอปยืนยันตัวตนของคุณ',
         enterVerificationCode: 'จากนั้น ป้อนรหัสยืนยัน 6 หลัก',
         verifyEnable: 'ยืนยันและเปิดใช้งาน',
-        
+
         // Plugins Page
         connectYourPlatform: 'เชื่อมต่อแพลตฟอร์มของคุณ',
         connect: 'เชื่อมต่อ',
@@ -324,7 +326,7 @@ export const translations = {
         generating: 'กำลังสร้าง...',
         reportReady: 'รายงานของคุณพร้อมแล้ว!',
         download: 'ดาวน์โหลด',
-        
+
         // Payouts Page
         payoutHistory: 'ประวัติการจ่ายเงิน',
         nextPayout: 'การจ่ายเงินครั้งถัดไป',
@@ -391,6 +393,7 @@ export const translations = {
         language: 'Ngôn ngữ',
         currency: 'Tiền tệ',
         comingSoon: 'Sắp ra mắt...',
+        aiVideoDirectory: 'Danh mục Video AI',
     },
     id: {
         home: 'Beranda',
@@ -408,6 +411,7 @@ export const translations = {
         language: 'Bahasa',
         currency: 'Mata Uang',
         comingSoon: 'Segera Hadir...',
+        aiVideoDirectory: 'Direktori Video AI',
     },
     ms: {
         home: 'Laman Utama',
@@ -425,6 +429,7 @@ export const translations = {
         language: 'Bahasa',
         currency: 'Mata Wang',
         comingSoon: 'Akan Datang...',
+        aiVideoDirectory: 'Direktori Video AI',
     },
     ph: {
         home: 'Home',
@@ -442,6 +447,7 @@ export const translations = {
         language: 'Wika',
         currency: 'Salapi',
         comingSoon: 'Malapit na...',
+        aiVideoDirectory: 'Directory ng Video AI',
     },
     kh: {
         home: 'ទំព័រដើម',
@@ -459,6 +465,7 @@ export const translations = {
         language: 'ភាសា',
         currency: 'រូបិយប័ណ្ណ',
         comingSoon: 'មកដល់ឆាប់ៗនេះ...',
+        aiVideoDirectory: 'ថតចម្លងវីដេអូ AI',
     },
     mm: {
         home: 'ပင်မစာမျက်နှာ',
@@ -476,6 +483,7 @@ export const translations = {
         language: 'ဘာသာစကား',
         currency: 'ငွေကြေး',
         comingSoon: 'မကြာမီလာမည်...',
+        aiVideoDirectory: 'ဗီဒီယို AI လမ်းညွှန်',
     },
     la: {
         home: 'ໜ້າຫຼັກ',
@@ -493,11 +501,12 @@ export const translations = {
         language: 'ພາສາ',
         currency: 'ສະກຸນເງິນ',
         comingSoon: 'ໄວໆນີ້...',
+        aiVideoDirectory: 'ໄດເລກທີຣີ Video AI',
     }
 };
 
 type DeepKeys<T> = T extends object ? {
-  [K in keyof T]-?: `${K & string}` | `${K & string}.${DeepKeys<T[K]>}`
+    [K in keyof T]-?: `${K & string}` | `${K & string}.${DeepKeys<T[K]>}`
 }[keyof T] : "";
 
 export type TranslationKeys = DeepKeys<typeof translations.en>;

@@ -16,6 +16,8 @@ import DeveloperPage from './pages/DeveloperPage';
 import IntegrationsPage from './pages/IntegrationsPage';
 import ConsumerPaymentPage from './pages/ConsumerPaymentPage';
 import LoginPage from './pages/LoginPage';
+import LatexCompilerPage from './pages/LatexCompilerPage';
+import AIVideoDirectoryPage from './pages/AIVideoDirectoryPage';
 
 // Components
 import Sidebar from './components/Sidebar';
@@ -63,7 +65,7 @@ const DashboardLayout: React.FC<{
     return (
         <div className={`flex min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-background text-text-primary`}>
             <Sidebar isOpen={isSidebarOpen} setOpen={setSidebarOpen} />
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden lg:pl-0 pl-0 transition-all">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden transition-all lg:pl-64">
                 <Header 
                     onMenuClick={() => setSidebarOpen(true)} 
                     theme={theme} 
@@ -82,6 +84,7 @@ const DashboardLayout: React.FC<{
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem('xeta_theme') || 'dark');
     const [isProduction, setIsProduction] = useState(localStorage.getItem('xeta_mode') === 'production');
+    const latexEnabled = import.meta.env.DEV || (import.meta as any)?.env?.VITE_ENABLE_LATEX_COMPILER === 'true';
 
     useEffect(() => {
         localStorage.setItem('xeta_theme', theme);
@@ -129,7 +132,9 @@ function App() {
                                 isProduction={isProduction} 
                                 setIsProduction={setIsProduction} 
                             />)} />
+                            {latexEnabled ? <Route path="/latex" element={wrap(<LatexCompilerPage />)} /> : null}
                             <Route path="/integrations" element={wrap(<IntegrationsPage />)} />
+                            <Route path="/ai-video" element={wrap(<AIVideoDirectoryPage />)} />
 
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>

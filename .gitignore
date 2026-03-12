@@ -11,6 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+.dev.vars
+sovereign-deployment.jsonc
+.npm_local/
+.bin_temp/
+.tmp/
+test-login.mjs
 
 # Editor directories and files
 .vscode/*

@@ -1,0 +1,337 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fontspec}
+
+% Optional system fonts (leave defaults if missing).
+\IfFontExistsTF{Inter}{\setmainfont{Inter}\setsansfont{Inter}}{}
+\IfFontExistsTF{JetBrains Mono}{\setmonofont{JetBrains Mono}}{}
+
+% Minimal Listings language defs (Tectonic/listings doesn't ship YAML/TOML/TypeScript by default).
+\lstdefinelanguage{yaml}{
+  sensitive=false,
+  comment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]'
+}
+\lstdefinelanguage{toml}{
+  sensitive=true,
+  comment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]'
+}
+\lstdefinelanguage{JavaScript}{
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morekeywords={break,case,catch,class,const,continue,debugger,default,delete,do,else,export,extends,finally,for,function,if,import,in,instanceof,let,new,return,super,switch,this,throw,try,typeof,var,void,while,with,yield,true,false,null,undefined}
+}
+\lstdefinelanguage{typescript}[]{JavaScript}{
+  morekeywords={type,interface,implements,enum,public,private,protected,readonly,as,async,await,namespace,declare,module,abstract}
+}
+
+\title{\Huge\textbf{AETHA} \\ \Large Sovereign Monitoring for the Edge Era}
+\author{Operator: Gemini My Twin Shadow \\ Seed: 03031992-2222}
+\date{March 11, BE 2569 (2026)}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\section*{Sovereign Declaration}
+
+\begin{center}
+\textit{"Monitoring should be sovereign, not rented. Your data belongs to you, not a SaaS provider."} \\
+— AETHA Manifesto, v1.0
+\end{center}
+
+\section{System Architecture}
+
+\subsection{Core Components}
+
+\begin{verbatim}
+AETHA/
+|-- collector/          # Edge metrics collector
+|   |-- agent.ts       # Lightweight Node.js agent
+|   `-- worker.ts      # Cloudflare Worker collector
+|-- api/               # Sovereign API Layer
+|   |-- metrics.ts     # Time-series ingestion
+|   |-- alerts.ts      # Alert management
+|   `-- auth.ts        # Merchant authentication
+|-- dashboard/         # React + TypeScript UI
+|   |-- components/    # Reusable sovereign components
+|   |-- pages/         # Dashboard views
+|   `-- hooks/         # Real-time WebSocket hooks
+`-- integrations/      # Data source connectors
+    |-- prometheus/    # Prometheus remote write
+    |-- cloudflare/    # Cloudflare Analytics
+    `-- custom/        # Bring your own metrics
+\end{verbatim}
+
+\subsection{Technology Stack}
+
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Component} & \textbf{Technology} \\
+\hline
+Frontend & React 19, TypeScript, TailwindCSS \\
+Runtime & Cloudflare Workers \\
+Database & D1 (SQLite), R2 (Object Storage) \\
+Real-time & WebSocket, Server-Sent Events \\
+Metrics & Time-series on D1 \\
+Auth & Turnstile + JWT \\
+Deployment & Cloudflare Pages \\
+\hline
+\end{tabular}
+
+\section{Sovereign Design System}
+
+\subsection{Color Palette}
+
+\begin{verbatim}
+Forest Green    #2D6A4F  -- Primary sovereignty
+Ancient Gold    #D4AF37  -- Accent & prosperity
+Obsidian Green  #020804  -- Dark mode foundation
+Light Parchment #FDFAF3  -- Light mode foundation
+\end{verbatim}
+
+\subsection{Typography}
+
+\begin{verbatim}
+Headers:    Playfair Display (700, 900)  — Sovereign authority
+Body:       Inter (400, 500, 600, 700)   — Modern clarity
+Monospace:  JetBrains Mono                 — Technical precision
+\end{verbatim}
+
+\subsection{Visual Effects}
+
+\begin{verbatim}
+.neon-aura {
+  filter: drop-shadow(0 0 8px var(--neon-core))
+          drop-shadow(0 0 12px var(--neon-glow));
+}
+
+.satin-sheen {
+  background: linear-gradient(135deg,
+              #1b4332 0%,
+              #081c15 100%);
+  position: relative;
+  overflow: hidden;
+}
+\end{verbatim}
+
+\section{API Reference}
+
+\subsection{Metrics Ingestion}
+
+\begin{lstlisting}[language=bash]
+POST https://api.aetha.dev/v1/metrics
+Authorization: Bearer <merchant_token>
+Content-Type: application/json
+
+{
+  "metrics": [{
+    "name": "cpu_usage",
+    "value": 42.5,
+    "timestamp": "2026-03-11T10:30:00Z",
+    "tags": {
+      "server": "edge-01",
+      "region": "sin"
+    }
+  }]
+}
+\end{lstlisting}
+
+\subsection{Real-time WebSocket}
+
+\begin{lstlisting}[language=JavaScript]
+const ws = new WebSocket('wss://stream.aetha.dev/v1/live');
+ws.onmessage = (event) => {
+  const metric = JSON.parse(event.data);
+  updateDashboard(metric);
+};
+\end{lstlisting}
+
+\section{Collector Agent}
+
+\subsection{Installation}
+
+\begin{lstlisting}[language=bash]
+# One-line sovereign installation
+curl -fsSL https://get.aetha.dev | bash
+
+# Or manual install
+npm install -g @aetha/collector
+aetha configure --token <your_token>
+aetha start
+\end{lstlisting}
+
+\subsection{Configuration}
+
+\begin{lstlisting}[language=yaml]
+# /etc/aetha/config.yaml
+sovereign:
+  token: ${AETHA_TOKEN}
+  endpoint: https://api.aetha.dev
+
+collectors:
+  - type: system
+    metrics: [cpu, memory, disk, network]
+    interval: 15s
+
+  - type: cloudflare
+    zone: example.com
+    metrics: [requests, bandwidth, threats]
+
+  - type: custom
+    command: ./collect-payment-metrics.sh
+    interval: 1m
+\end{lstlisting}
+
+\section{Dashboard Components}
+
+\subsection{Sovereign Metrics Card}
+
+\begin{lstlisting}[language=typescript]
+import { Card, NeonAura, SatinSheen } from '@aetha/ui';
+
+export const MetricCard = ({ title, value, trend }) => (
+  <Card className="sovereign-card">
+    <NeonAura>
+      <SatinSheen>
+        <h3 className="font-serif text-gold">
+          {title}
+        </h3>
+        <p className="text-3xl font-bold text-forest">
+          {value}
+        </p>
+        <TrendIndicator value={trend} />
+      </SatinSheen>
+    </NeonAura>
+  </Card>
+);
+\end{lstlisting}
+
+\section{Deployment}
+
+\subsection{Cloudflare Workers}
+
+\begin{lstlisting}[language=toml]
+# wrangler.toml
+name = "aetha-api"
+main = "src/api/index.ts"
+compatibility_date = "2026-03-11"
+
+[[d1_databases]]
+binding = "AETHA_DB"
+database_name = "aetha-metrics"
+database_id = "your-db-id"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+\end{lstlisting}
+
+\subsection{Pages Deployment}
+
+\begin{lstlisting}[language=bash]
+# Build and deploy dashboard
+npm run build
+npx wrangler pages deploy ./dist \
+  --project-name aetha \
+  --branch main
+
+# Deploy collectors
+npm run deploy:collectors
+\end{lstlisting}
+
+\section{Roadmap}
+
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Phase} & \textbf{Milestones} \\
+\hline
+v0.1 & Basic metrics collection + dashboard \\
+v0.2 & Alerting + notifications \\
+v0.3 & Multi-tenancy + team features \\
+v1.0 & Sovereign Cloud release \\
+v1.5 & AI-powered anomaly detection \\
+v2.0 & Edge-native ML forecasting \\
+\hline
+\end{tabular}
+
+\section{Comparison: AETHA vs Others}
+
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Feature} & \textbf{AETHA} & \textbf{Grafana Cloud} & \textbf{Datadog} \\
+\hline
+Sovereign ownership & Yes (native) & No (rented) & No (rented) \\
+Edge-native & Yes (Workers) & No (legacy) & No (legacy) \\
+Forest Green theme & Yes & No (blue) & No (purple) \\
+Pay-per-metric & Yes & No (per-seat) & No (per-host) \\
+Open source collector & Yes & No & No \\
+\hline
+\end{tabular}
+
+\section{Getting Started}
+
+\subsection{Quick Start}
+
+\begin{lstlisting}[language=bash]
+# 1. Create your sovereign space
+mkdir ~/aetha && cd ~/aetha
+
+# 2. Initialize
+npm init -y
+npm install @aetha/core @aetha/ui
+
+# 3. Set up authentication
+echo "AETHA_TOKEN=your_sovereign_key" > .env
+
+# 4. Start collecting
+npm run dev
+
+# 5. Open dashboard
+open https://localhost:3000
+\end{lstlisting}
+
+\subsection{First Dashboard}
+
+\begin{lstlisting}[language=typescript]
+// src/App.tsx
+import { SovereignDashboard } from '@aetha/ui';
+
+export default function App() {
+  return (
+    <SovereignDashboard
+      title="My Sovereign Metrics"
+      theme="forest-dark"
+      metrics={['cpu', 'memory', 'payments']}
+      refreshInterval={10000}
+    />
+  );
+}
+\end{lstlisting}
+
+\section{Conclusion}
+
+AETHA represents a new paradigm in monitoring: \textbf{sovereign by design, beautiful by nature, and built for the edge era}. With its foundation in Cloudflare Workers and its aesthetic rooted in Forest Green and Ancient Gold, AETHA isn't just a tool—it's a statement.
+
+\begin{center}
+\textit{"Your infrastructure is sovereign. Your monitoring should be too."}
+\end{center}
+
+\vspace{2cm}
+\begin{flushright}
+\textbf{Operator:} Gemini My Twin Shadow \\
+\textbf{Seed:} 03031992-2222 \\
+\textbf{Date:} March 11, BE 2569 (2026)
+\end{flushright}
+
+\end{document}

@@ -78,13 +78,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (googleData: GoogleAuthData) => {
         try {
-            const res = await fetch(`${AUTH_BASE_URL}/api/auth/google`, {
+            console.log("AuthContext: login() called with data:", googleData);
+            console.log("AuthContext: AUTH_BASE_URL is:", AUTH_BASE_URL);
+            
+            const url = `${AUTH_BASE_URL}/api/auth/google`;
+            console.log("AuthContext: Fetching URL:", url);
+            
+            const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(googleData)
             });
+            console.log("AuthContext: Fetch Response Status:", res.status);
+            
             if (res.ok) {
                 const data = await res.json() as AuthResponse;
+                console.log("AuthContext: Login successful! Payload:", data);
                 setToken(data.token);
                 setUser(data.user);
                 localStorage.setItem('xeta_token', data.token);
@@ -105,6 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem('xeta_token', mockToken);
         }
     };
+
 
     const logout = () => {
         setToken(null);

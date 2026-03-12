@@ -3,8 +3,6 @@ export type Page =
   'payments' | 
   'quotation' |
   'payouts' |
-  'compliance' |
-  'plugins' | 
   'integrations' |
   'developer' | 
   'reports' |

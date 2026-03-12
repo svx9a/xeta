@@ -23,38 +23,65 @@ const LoginPage: React.FC = () => {
         setIsAuthenticating(true);
         
         setTimeout(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const token = (window as any).turnstile?.getResponse();
-            
-            // SIMULATION: In a real app, this sends email/pass to /api/auth/login
-            await login({
-                id: 'email_user_' + btoa(email).substring(0, 8),
-                name: email.split('@')[0],
-                email: email,
-                tenant_id: 'TENANT-001',
-                turnstile_token: token || 'simulated_token'
-            });
-            setIsAuthenticating(false);
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                let turnstileToken = 'simulated_token';
+                try {
+                    turnstileToken = (window as any).turnstile?.getResponse() || 'simulated_token';
+                } catch(e) {
+                    console.error("LoginPage: Turnstile error", e);
+                }
+                
+                // SIMULATION: In a real app, this sends email/pass to /api/auth/login
+                await login({
+                    id: 'email_user_' + btoa(email).substring(0, 8),
+                    name: email.split('@')[0],
+                    email: email,
+                    tenant_id: 'TENANT-001',
+                    turnstile_token: turnstileToken
+                });
+            } catch (err) {
+                console.error("LoginPage: Error inside setTimeout execution:", err);
+            } finally {
+                setIsAuthenticating(false);
+            }
         }, 1200);
     };
 
+
     const handleGoogleLogin = async () => {
+        console.log("Admin Overdrive button actually clicked!");
         setIsAuthenticating(true);
         setTimeout(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const token = (window as any).turnstile?.getResponse();
-            const simulatedGoogleId = 'google_v2_' + Math.floor(Math.random() * 1000000);
-            
-            await login({
-                id: simulatedGoogleId,
-                name: 'Sovereign Merchant',
-                email: 'merchant@xetapay.com',
-                tenant_id: 'TENANT-001',
-                turnstile_token: token || 'simulated_token'
-            });
-            setIsAuthenticating(false);
+            console.log("LoginPage: setTimeout triggered after 1.5s");
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                let turnstileToken = 'simulated_token';
+                try {
+                    turnstileToken = (window as any).turnstile?.getResponse() || 'simulated_token';
+                } catch(e) {
+                    console.error("LoginPage: Turnstile error", e);
+                }
+                
+                const simulatedGoogleId = 'google_v2_' + Math.floor(Math.random() * 1000000);
+                
+                console.log("LoginPage: Calling login context function...");
+                await login({
+                    id: simulatedGoogleId,
+                    name: 'Sovereign Merchant',
+                    email: 'merchant@xetapay.com',
+                    tenant_id: 'TENANT-001',
+                    turnstile_token: turnstileToken
+                });
+                console.log("LoginPage: login call completed!");
+            } catch (err) {
+                console.error("LoginPage: Error inside setTimeout execution:", err);
+            } finally {
+                setIsAuthenticating(false);
+            }
         }, 1500);
     };
+
 
     return (
         <div className="min-h-[100dvh] bg-background relative overflow-x-hidden flex flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-14">
@@ -63,13 +90,13 @@ const LoginPage: React.FC = () => {
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[120px] rounded-full"></div>
 
             <div className="w-full max-w-md relative z-10 animate-fadeIn">
-                <div className="text-center mb-8 sm:mb-10">
-                    <img
-                        src="/icons/xetapay-logo.png"
-                        alt="XETAPAY"
-                        className="w-72 sm:w-80 max-w-[92%] h-auto mx-auto mb-3 object-contain select-none"
-                        draggable={false}
-                    />
+	                <div className="text-center mb-8 sm:mb-10">
+	                    <img
+	                        src="/icons/xeta-wordmark.png"
+	                        alt="XETAPAY"
+	                        className="w-72 sm:w-80 max-w-[92%] h-auto mx-auto mb-3 object-contain select-none"
+	                        draggable={false}
+	                    />
                     <p className="text-text-secondary font-bold uppercase tracking-[0.2em] text-[10px] opacity-60">Next-Gen Payment Infrastructure</p>
                 </div>
 
